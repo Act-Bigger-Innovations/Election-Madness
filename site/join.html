@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Join Election Madness 2028</title>
+<meta name="description" content="Get the week's matchup every Monday. 100 names, 32 spots, and your comment is the vote.">
+<meta property="og:title" content="Join Election Madness 2028">
+<meta property="og:description" content="Get the week's matchup every Monday. Your comment is the vote.">
+<meta property="og:image" content="https://madness.mrearthrebirth.com/social-card.png">
+<meta property="og:url" content="https://madness.mrearthrebirth.com/join">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#141923">
+<link rel="icon" href="favicon.ico"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Chivo+Mono:wght@500;700&family=Public+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+body.join{background:linear-gradient(135deg,#243150,#0E1220);color:#F8F1E3;min-height:100vh;display:flex;flex-direction:column}
+.jwrap{flex:1;display:flex;align-items:center;justify-content:center;padding:clamp(28px,6vw,64px) clamp(16px,5vw,32px)}
+.jcard{width:100%;max-width:560px;text-align:center}
+.jcard .mk{width:78px;height:78px;margin:0 auto 22px;display:block}
+.jcard h1{font-family:var(--d);font-weight:900;text-transform:uppercase;font-size:clamp(42px,9vw,74px);line-height:.9}
+.jcard h1 .a{color:var(--led)}
+.jcard .sub{color:#C9D0DC;font-size:clamp(16px,2.4vw,19px);margin-top:16px}
+form{display:flex;gap:10px;margin-top:26px}
+input[type=email]{flex:1;min-width:0;font:inherit;font-size:17px;padding:16px;border:2px solid #2B3445;border-radius:6px;background:#0B0F16;color:#F8F1E3}
+input[type=email]::placeholder{color:#6B7488}
+input[type=email]:focus{outline:none;border-color:var(--led)}
+form button{font:inherit;font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:15px;padding:16px 22px;border:0;border-radius:6px;background:var(--led);color:#141923;cursor:pointer;white-space:nowrap}
+form button:disabled{opacity:.6;cursor:progress}
+.fine{color:#8A93A5;font-size:13px;margin-top:14px}
+.bullets{list-style:none;padding:0;margin:30px 0 0;display:grid;gap:10px;text-align:left}
+.bullets li{background:rgba(255,255,255,.05);border:1px solid #2B3445;border-radius:6px;padding:12px 14px;font-size:15px;color:#DDE3EC}
+.bullets b{font-family:var(--m);font-size:11px;letter-spacing:.12em;color:var(--led);display:block;margin-bottom:3px;text-transform:uppercase}
+.msg{margin-top:16px;font-size:15px;min-height:22px}
+.msg.err{color:#F08A7D}
+.done{display:none}
+body.sent .form-wrap{display:none}
+body.sent .done{display:block}
+.done h2{font-family:var(--d);font-weight:900;text-transform:uppercase;font-size:clamp(30px,6vw,48px);color:var(--led)}
+.done p{color:#C9D0DC;margin-top:12px}
+.done .btn{margin-top:18px}
+.jfoot{padding:18px clamp(16px,5vw,32px);font-family:var(--m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#6B7488;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.jfoot a{color:#9AA3B5}
+@media (max-width:520px){form{flex-direction:column}form button{width:100%}}
+</style>
+</head><body class="join">
+<div class="jwrap"><div class="jcard">
+  <svg viewBox="0 0 512 512" class="mk" aria-hidden="true"><defs><linearGradient id="mk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#243150"/><stop offset="1" stop-color="#0E1220"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#mk)"/><path d="M118 150 H236 V362 H118 M236 256 H282 L334 308 L424 188" fill="none" stroke="#FFB21A" stroke-width="46" stroke-linecap="square" transform="translate(-14 0)"/></svg>
+
+  <div class="form-wrap">
+    <h1>Get the matchup<br><span class="a">every Monday.</span></h1>
+    <p class="sub">100 names. 32 spots in the 2028 bracket. Four walk in each week, one survives, and your comment is the vote.</p>
+    <form id="joinForm" novalidate>
+      <input id="email" type="email" name="email" placeholder="you@email.com" autocomplete="email" required aria-label="Email address">
+      <button type="submit" id="joinBtn">Join the bracket</button>
+    </form>
+    <p class="msg" id="msg" role="status"></p>
+    <p class="fine">One email a week. Unsubscribe any time. We never sell your address.</p>
+    <ul class="bullets">
+      <li><b>Monday</b>This week's two groups, the names, and what's at stake.</li>
+      <li><b>Sunday</b>Results, the best argument of the week, and who's on the bubble.</li>
+      <li><b>Lock Watch</b>The moment someone actually declares for 2028.</li>
+    </ul>
+  </div>
+
+  <div class="done">
+    <h2>You're in.</h2>
+    <p>Check your inbox for the rules. The first matchup lands Monday.</p>
+    <p>Voting happens in the comments on Instagram — follow so your group shows up.</p>
+    <a class="btn big" href="https://www.instagram.com/electionmadness28/" target="_blank" rel="noopener">Follow @electionmadness28</a>
+    <p style="margin-top:14px"><a href="/" style="color:#9AA3B5;font-size:14px">See the full bracket →</a></p>
+  </div>
+</div></div>
+<footer class="jfoot">
+  <span>Election Madness 2028 · a fan game, not a poll</span>
+  <span><a href="/">Bracket</a> · <a href="https://www.instagram.com/electionmadness28/">Instagram</a></span>
+</footer>
+<script>
+// If the signup runs on a separate Worker (Plan B), set this to its URL:
+// window.JOIN_ENDPOINT = "https://join.mrearthrebirth.com/";
+(function(){
+  var f=document.getElementById('joinForm'),b=document.getElementById('joinBtn'),e=document.getElementById('email'),m=document.getElementById('msg');
+  f.addEventListener('submit',async function(ev){
+    ev.preventDefault(); m.className='msg'; m.textContent='';
+    var email=e.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ m.className='msg err'; m.textContent='That email doesn’t look right.'; e.focus(); return; }
+    b.disabled=true; var old=b.textContent; b.textContent='Adding you…';
+    try{
+      var r=await fetch(window.JOIN_ENDPOINT||'/api/join',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:email})});
+      var d=await r.json().catch(function(){return {};});
+      if(r.ok&&d.ok){ document.body.classList.add('sent'); window.scrollTo(0,0); return; }
+      throw new Error(d.error||'failed');
+    }catch(err){
+      m.className='msg err';
+      m.innerHTML='Couldn’t add you just now. Try again, or follow <a href="https://www.instagram.com/electionmadness28/" style="color:#FFB21A">@electionmadness28</a> and you won’t miss a group.';
+      b.disabled=false; b.textContent=old;
+    }
+  });
+})();
+</script>
+</body></html>
