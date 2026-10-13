@@ -2,7 +2,7 @@
 
 A public, March Madness-style bracket of likely 2028 presidential contenders. One vote per matchup per device, one week per round, winners advance. Hypothetical until candidates declare.
 
-- Live site: (Cloudflare Pages, pending first deploy)
+- Live site: https://electionmadness.mrearthrebirth.com (Cloudflare Pages; `site/` is the deployed tree, `site/vote/` is the on-site voting page, not yet linked from the home page)
 - Database: Foundry Supabase project `hbpurggayqtjshwlwmet`, tables `em_candidates`, `em_rounds`, `em_matchups`, `em_votes`, view `em_tallies`
 - Social: @ElectionMadness28
 
@@ -17,7 +17,8 @@ No task files, no Drive documents for code. The repo is the record.
 
 ## Layout
 
-- `site/index.html`: the whole site, one file, no build step. Reads with the anon key; the only write is one vote row.
+- `site/index.html`, `style.css`, `join.html`: the live site as imported Oct 13 (the 100, schedule, rules, standings; voting runs on Instagram comments).
+- `site/vote/index.html`: on-site voting page, one file, no build step. Reads with the anon key; the only write is one vote row. Decision pending on whether votes live here or on Instagram.
 - `data/*.csv`: candidates, rounds, matchups. Edit these to change the field. `npm run seed` prints idempotent SQL; the owner runs it against the database (never the site).
 - `scripts/check.sh`: the one check (secrets, emojis, data integrity, html balance, Playwright smoke at phone width).
 - `test/smoke.mjs`: renders against a fixture and casts a vote through a mocked API.

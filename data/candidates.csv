@@ -1,33 +1,101 @@
-id,name,party,seed,title,status
-newsom,Gavin Newsom,blue,1,Governor of California,hypothetical
-shapiro,Josh Shapiro,blue,2,Governor of Pennsylvania,hypothetical
-whitmer,Gretchen Whitmer,blue,3,Governor of Michigan,hypothetical
-pritzker,JB Pritzker,blue,4,Governor of Illinois,hypothetical
-buttigieg,Pete Buttigieg,blue,5,Former Transportation Secretary,hypothetical
-aoc,Alexandria Ocasio-Cortez,blue,6,US Representative New York,hypothetical
-harris,Kamala Harris,blue,7,Former Vice President,hypothetical
-beshear,Andy Beshear,blue,8,Governor of Kentucky,hypothetical
-moore,Wes Moore,blue,9,Governor of Maryland,hypothetical
-booker,Cory Booker,blue,10,US Senator New Jersey,hypothetical
-warnock,Raphael Warnock,blue,11,US Senator Georgia,hypothetical
-kelly,Mark Kelly,blue,12,US Senator Arizona,hypothetical
-gallego,Ruben Gallego,blue,13,US Senator Arizona,hypothetical
-walz,Tim Walz,blue,14,Governor of Minnesota,hypothetical
-polis,Jared Polis,blue,15,Governor of Colorado,hypothetical
-khanna,Ro Khanna,blue,16,US Representative California,hypothetical
-vance,JD Vance,red,1,Vice President,hypothetical
-rubio,Marco Rubio,red,2,Secretary of State,hypothetical
-desantis,Ron DeSantis,red,3,Governor of Florida,hypothetical
-youngkin,Glenn Youngkin,red,4,Former Governor of Virginia,hypothetical
-cruz,Ted Cruz,red,5,US Senator Texas,hypothetical
-haley,Nikki Haley,red,6,Former UN Ambassador,hypothetical
-ramaswamy,Vivek Ramaswamy,red,7,Entrepreneur,hypothetical
-trumpjr,Donald Trump Jr.,red,8,Businessman,hypothetical
-carlson,Tucker Carlson,red,9,Broadcaster,hypothetical
-sanders,Sarah Huckabee Sanders,red,10,Governor of Arkansas,hypothetical
-kemp,Brian Kemp,red,11,Governor of Georgia,hypothetical
-scott,Tim Scott,red,12,US Senator South Carolina,hypothetical
-hawley,Josh Hawley,red,13,US Senator Missouri,hypothetical
-noem,Kristi Noem,red,14,Secretary of Homeland Security,hypothetical
-burgum,Doug Burgum,red,15,Secretary of the Interior,hypothetical
-paul,Rand Paul,red,16,US Senator Kentucky,hypothetical
+id,name,party,seed,title,status,tier
+gavinnewsom,Gavin Newsom,blue,,Governor · California,hypothetical,Heavyweights
+kamalaharris,Kamala Harris,blue,,Former Vice President,hypothetical,Heavyweights
+alexandriaocasiocortez,Alexandria Ocasio-Cortez,blue,,U.S. Rep. · New York,hypothetical,Heavyweights
+joshshapiro,Josh Shapiro,blue,,Governor · Pennsylvania,hypothetical,Heavyweights
+petebuttigieg,Pete Buttigieg,blue,,Former Transportation Secretary,hypothetical,Heavyweights
+gretchenwhitmer,Gretchen Whitmer,blue,,Governor · Michigan,hypothetical,Heavyweights
+jbpritzker,J.B. Pritzker,blue,,Governor · Illinois,hypothetical,Heavyweights
+andybeshear,Andy Beshear,blue,,Governor · Kentucky,hypothetical,Heavyweights
+wesmoore,Wes Moore,blue,,Governor · Maryland,hypothetical,Heavyweights
+corybooker,Cory Booker,blue,,U.S. Senator · New Jersey,hypothetical,Heavyweights
+markkelly,Mark Kelly,blue,,U.S. Senator · Arizona,hypothetical,Heavyweights
+rubengallego,Ruben Gallego,blue,,U.S. Senator · Arizona,hypothetical,Heavyweights
+rokhanna,Ro Khanna,blue,,U.S. Rep. · California,hypothetical,Contenders
+elissaslotkin,Elissa Slotkin,blue,,U.S. Senator · Michigan,hypothetical,Contenders
+chrismurphy,Chris Murphy,blue,,U.S. Senator · Connecticut,hypothetical,Contenders
+jaredpolis,Jared Polis,blue,,Governor · Colorado,hypothetical,Contenders
+raphaelwarnock,Raphael Warnock,blue,,U.S. Senator · Georgia,hypothetical,Contenders
+amyklobuchar,Amy Klobuchar,blue,,U.S. Senator · Minnesota,hypothetical,Contenders
+jonossoff,Jon Ossoff,blue,,U.S. Senator · Georgia,hypothetical,Contenders
+chrisvanhollen,Chris Van Hollen,blue,,U.S. Senator · Maryland,hypothetical,Contenders
+roycooper,Roy Cooper,blue,,Former Governor · North Carolina,hypothetical,Contenders
+rahmemanuel,Rahm Emanuel,blue,,Former Ambassador to Japan,hypothetical,Contenders
+philmurphy,Phil Murphy,blue,,Former Governor · New Jersey,hypothetical,Contenders
+mitchlandrieu,Mitch Landrieu,blue,,Former Mayor · New Orleans,hypothetical,Contenders
+berniesanders,Bernie Sanders,blue,,U.S. Senator · Vermont,hypothetical,Long shots
+jasminecrockett,Jasmine Crockett,blue,,U.S. Rep. · Texas,hypothetical,Long shots
+markcuban,Mark Cuban,blue,,Entrepreneur,hypothetical,Long shots
+stephenasmith,Stephen A. Smith,blue,,ESPN commentator,hypothetical,Long shots
+johnfetterman,John Fetterman,blue,,U.S. Senator · Pennsylvania,hypothetical,Long shots
+andykim,Andy Kim,blue,,U.S. Senator · New Jersey,hypothetical,Long shots
+joshstein,Josh Stein,blue,,Governor · North Carolina,hypothetical,Long shots
+sherrodbrown,Sherrod Brown,blue,,Former U.S. Senator · Ohio,hypothetical,Long shots
+ginaraimondo,Gina Raimondo,blue,,Former Commerce Secretary,hypothetical,Long shots
+hakeemjeffries,Hakeem Jeffries,blue,,House Democratic Leader,hypothetical,Long shots
+jeffjackson,Jeff Jackson,blue,,Attorney General · North Carolina,hypothetical,Long shots
+jamestalarico,James Talarico,blue,,Texas state Representative,hypothetical,Long shots
+adamschiff,Adam Schiff,blue,,U.S. Senator · California,hypothetical,Long shots
+jamieraskin,Jamie Raskin,blue,,U.S. Rep. · Maryland,hypothetical,Long shots
+tammyduckworth,Tammy Duckworth,blue,,U.S. Senator · Illinois,hypothetical,Long shots
+maurahealey,Maura Healey,blue,,Governor · Massachusetts,hypothetical,Long shots
+mallorymcmorrow,Mallory McMorrow,blue,,Michigan state Senator,hypothetical,Long shots
+betoorourke,Beto O'Rourke,blue,,Former U.S. Rep. · Texas,hypothetical,Long shots
+deanphillips,Dean Phillips,blue,,Former U.S. Rep. · Minnesota,hypothetical,Long shots
+mariannewilliamson,Marianne Williamson,blue,,Author · past candidate,hypothetical,Long shots
+jontester,Jon Tester,blue,,Former U.S. Senator · Montana,hypothetical,Long shots
+joshgreen,Josh Green,blue,,Governor · Hawaii,hypothetical,Long shots
+jonstewart,Jon Stewart,blue,,Comedian · Daily Show host,hypothetical,Long shots
+kathyhochul,Kathy Hochul,blue,,Governor · New York,hypothetical,Long shots
+writein,Write-in #1,blue,,Picked by comments · Oct 1–4,hypothetical,Write-ins
+writein2,Write-in #2,blue,,Picked by comments · Oct 1–4,hypothetical,Write-ins
+jdvance,JD Vance,red,,Vice President,hypothetical,Heavyweights
+marcorubio,Marco Rubio,red,,Secretary of State,hypothetical,Heavyweights
+rondesantis,Ron DeSantis,red,,Governor · Florida,hypothetical,Heavyweights
+donaldtrumpjr,Donald Trump Jr.,red,,Businessman,hypothetical,Heavyweights
+nikkihaley,Nikki Haley,red,,Former U.N. Ambassador,hypothetical,Heavyweights
+glennyoungkin,Glenn Youngkin,red,,Former Governor · Virginia,hypothetical,Heavyweights
+briankemp,Brian Kemp,red,,Governor · Georgia,hypothetical,Heavyweights
+tedcruz,Ted Cruz,red,,U.S. Senator · Texas,hypothetical,Heavyweights
+joshhawley,Josh Hawley,red,,U.S. Senator · Missouri,hypothetical,Heavyweights
+vivekramaswamy,Vivek Ramaswamy,red,,Entrepreneur,hypothetical,Heavyweights
+gregabbott,Greg Abbott,red,,Governor · Texas,hypothetical,Heavyweights
+timscott,Tim Scott,red,,U.S. Senator · South Carolina,hypothetical,Heavyweights
+byrondonalds,Byron Donalds,red,,U.S. Rep. · Florida,hypothetical,Contenders
+elisestefanik,Elise Stefanik,red,,U.S. Rep. · New York,hypothetical,Contenders
+sarahhuckabeesanders,Sarah Huckabee Sanders,red,,Governor · Arkansas,hypothetical,Contenders
+randpaul,Rand Paul,red,,U.S. Senator · Kentucky,hypothetical,Contenders
+tomcotton,Tom Cotton,red,,U.S. Senator · Arkansas,hypothetical,Contenders
+tulsigabbard,Tulsi Gabbard,red,,Director of National Intelligence,hypothetical,Contenders
+petehegseth,Pete Hegseth,red,,Secretary of Defense,hypothetical,Contenders
+kristinoem,Kristi Noem,red,,Former Homeland Security Secretary,hypothetical,Contenders
+rickscott,Rick Scott,red,,U.S. Senator · Florida,hypothetical,Contenders
+mikebraun,Mike Braun,red,,Governor · Indiana,hypothetical,Contenders
+thomasmassie,Thomas Massie,red,,Former U.S. Rep. · Kentucky,hypothetical,Contenders
+gregbovino,Greg Bovino,red,,Former Border Patrol commander,hypothetical,Contenders
+roycewhite,Royce White,red,,Former NBA player,hypothetical,Long shots
+stevebannon,Steve Bannon,red,,Former White House strategist,hypothetical,Long shots
+tuckercarlson,Tucker Carlson,red,,Media host,hypothetical,Long shots
+marjorietaylorgreene,Marjorie Taylor Greene,red,,Former U.S. Rep. · Georgia,hypothetical,Long shots
+karilake,Kari Lake,red,,Former Arizona TV anchor,hypothetical,Long shots
+robertfkennedyjr,Robert F. Kennedy Jr.,red,,Health and Human Services Secretary,hypothetical,Long shots
+dougburgum,Doug Burgum,red,,Interior Secretary,hypothetical,Long shots
+chrissununu,Chris Sununu,red,,Former Governor · New Hampshire,hypothetical,Long shots
+mikepence,Mike Pence,red,,Former Vice President,hypothetical,Long shots
+katiebritt,Katie Britt,red,,U.S. Senator · Alabama,hypothetical,Long shots
+jimjordan,Jim Jordan,red,,U.S. Rep. · Ohio,hypothetical,Long shots
+mikejohnson,Mike Johnson,red,,Speaker of the House,hypothetical,Long shots
+kevinstitt,Kevin Stitt,red,,Governor · Oklahoma,hypothetical,Long shots
+spencercox,Spencer Cox,red,,Governor · Utah,hypothetical,Long shots
+jefflandry,Jeff Landry,red,,Governor · Louisiana,hypothetical,Long shots
+mattgaetz,Matt Gaetz,red,,Former U.S. Rep. · Florida,hypothetical,Long shots
+erictrump,Eric Trump,red,,Trump Organization executive,hypothetical,Long shots
+nancymace,Nancy Mace,red,,U.S. Rep. · South Carolina,hypothetical,Long shots
+mikelee,Mike Lee,red,,U.S. Senator · Utah,hypothetical,Long shots
+lizcheney,Liz Cheney,red,,Former U.S. Rep. · Wyoming,hypothetical,Long shots
+daveportnoy,Dave Portnoy,red,,Barstool Sports founder,hypothetical,Long shots
+bencarson,Ben Carson,red,,Former HUD Secretary,hypothetical,Long shots
+ericschmitt,Eric Schmitt,red,,U.S. Senator · Missouri,hypothetical,Long shots
+laratrump,Lara Trump,red,,Media host,hypothetical,Long shots
+writein2,Write-in #1,red,,Picked by comments · Oct 1–4,hypothetical,Write-ins
+writein2,Write-in #2,red,,Picked by comments · Oct 1–4,hypothetical,Write-ins

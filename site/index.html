@@ -1,226 +1,96 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Election Madness 2028</title>
-<meta name="description" content="A March Madness-style bracket of 2028 presidential contenders. One vote per matchup, one week per round. The public decides who advances.">
-<meta name="theme-color" content="#0b1020">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0b1020;--panel:#121a30;--panel2:#18223d;--line:#24304f;
-  --ink:#f2f4fa;--ink2:#aab3cc;--ink3:#6c7799;
-  --blue:#3b82f6;--blue2:#1d4ed8;--red:#ef4444;--red2:#b91c1c;--gold:#f5c542;--green:#22c55e;
-  --r:14px;
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
-header{position:sticky;top:0;z-index:5;background:rgba(11,16,32,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.top{display:flex;align-items:center;justify-content:space-between;min-height:60px;gap:8px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
-.mark{font:800 20px/1 Outfit,sans-serif;letter-spacing:-.01em;white-space:nowrap}
-.mark b{color:var(--gold);font-weight:800}
-nav{display:flex;gap:4px}
-nav a{padding:8px 12px;border-radius:999px;font:600 12px/1 Inter;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
-nav a.on{background:var(--panel2);color:var(--ink)}
-@media(max-width:560px){.mark{font-size:17px}nav a{padding:7px 8px;font-size:11px}}
-main{padding:24px 0 80px}
-h1{font:800 clamp(34px,6vw,56px)/1.02 Outfit;letter-spacing:-.02em;margin:0 0 8px}
-h2{font:700 22px/1.1 Outfit;margin:28px 0 12px;letter-spacing:-.01em}
-.lbl{font:600 11px/1 Inter;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
-.sub{color:var(--ink2);max-width:640px;margin:0 0 20px}
-.status{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font:600 12px/1 Inter;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin-bottom:18px}
-.status i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(34,197,94,.2)}
-.status.closed i{background:var(--ink3);box-shadow:none}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.match{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px}
-.match .hd{display:flex;justify-content:space-between;align-items:center}
-.match .hd .lbl.blue{color:var(--blue)} .match .hd .lbl.red{color:var(--red)}
-.cand{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;background:var(--panel2);border:1px solid transparent;text-align:left;width:100%;transition:transform .08s,border-color .15s}
-.cand:hover{border-color:var(--line)}
-.cand:active{transform:scale(.985)}
-.cand .seed{font:700 15px/1 Outfit;color:var(--ink3);text-align:center}
-.cand .nm{font:600 16px/1.15 Outfit}
-.cand .tt{font:400 12px/1.2 Inter;color:var(--ink3);margin-top:2px}
-.cand .pct{font:700 18px/1 Outfit;min-width:48px;text-align:right}
-.cand.mine{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
-.cand.win .nm{color:var(--gold)}
-.cand[disabled]{cursor:default}
-.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;display:flex}
-.bar b{display:block;height:100%}
-.bar.blue b{background:var(--blue)} .bar.red b{background:var(--red)}
-.meta{display:flex;justify-content:space-between;color:var(--ink3);font-size:12px}
-.note{color:var(--ink3);font-size:13px}
-.round{margin-bottom:26px}
-.round .rh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 10px}
-.round .rh h2{margin:0}
-.empty{padding:40px;text-align:center;color:var(--ink3);border:1px dashed var(--line);border-radius:var(--r)}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font:600 13px Inter;opacity:0;transition:opacity .2s;pointer-events:none}
-.toast.on{opacity:1}
-.how p{max-width:640px;color:var(--ink2)}
-.how ol{max-width:640px;color:var(--ink2);padding-left:20px}
-.how li{margin:6px 0}
-footer{border-top:1px solid var(--line);padding:18px 0;color:var(--ink3);font-size:12px}
-footer a{color:var(--ink2)}
-.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:0 0 22px}
-.kpi div{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px}
-.kpi .v{font:800 28px/1 Outfit;margin-top:6px}
-</style>
-</head>
-<body>
-<header><div class="wrap top">
-  <a class="mark" href="#now">ELECTION <b>MADNESS</b> 2028</a>
-  <nav>
-    <a href="#now" data-r="now">Vote</a>
-    <a href="#bracket" data-r="bracket">Bracket</a>
-    <a href="#results" data-r="results">Results</a>
-    <a href="#how" data-r="how">How</a>
-  </nav>
-</div></header>
-<main class="wrap" id="main"><div class="empty">Loading the field</div></main>
-<footer><div class="wrap">A hypothetical bracket until candidates declare. One vote per matchup per device. Follow <a href="https://instagram.com/ElectionMadness28" rel="noopener">@ElectionMadness28</a> for the weekly results show.</div></footer>
-<div class="toast" id="toast"></div>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Election Madness 2028 — the hypothetical 2028 bracket</title>
+<meta name="description" content="100 names. 32 spots. A March-Madness-style bracket for the 2028 presidential race, scored by the public on Instagram.">
+<meta property="og:title" content="Election Madness 2028"><meta property="og:description" content="100 names. 32 spots. You pick. A hypothetical 2028 bracket scored by the public.">
+<meta property="og:image" content="https://madness.mrearthrebirth.com/social-card.png"><meta property="og:url" content="https://madness.mrearthrebirth.com/"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#141923">
+<link rel="icon" href="favicon.ico"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Chivo+Mono:wght@500;700&family=Public+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="style.css">
+</head><body>
+<header class="top">
+  <a class="brand" href="/"><svg viewBox="0 0 512 512" class="mk" aria-hidden="true"><defs><linearGradient id="mk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#243150"/><stop offset="1" stop-color="#0E1220"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#mk)"/><path d="M118 150 H236 V362 H118 M236 256 H282 L334 308 L424 188" fill="none" stroke="#FFB21A" stroke-width="46" stroke-linecap="square" transform="translate(-14 0)"/></svg><span><b class="b">ELECTION</b> <b class="r">MADNESS</b> <i>’28</i><small>Bracket the ballot.</small></span></a>
+  <nav><a href="#groups">This week</a><a href="#standings">Standings</a><a href="#schedule">Schedule</a><a href="#field">The 100</a><a href="#rules">Rules</a>
+  <a class="btn ghost" href="/join">Join</a><a class="btn" href="https://www.instagram.com/ElectionMadness28/" target="_blank" rel="noopener">Vote on Instagram</a></nav>
+</header>
+<section class="hero">
+  <div class="hwrap">
+    <p class="ey">Hypothetical Season · The Qualifier</p>
+    <h1>100 names.<br><span class="a">32 spots.</span><br>You pick.</h1>
+    <p class="lede">Nobody has declared for 2028 yet — so this bracket is hypothetical, and the public decides who belongs in it. Every week, two groups of four. Your comment is your vote.</p>
+    <div class="cta"><a class="btn big" href="/join">Get the Monday matchup</a><a class="btn big alt" href="https://www.instagram.com/ElectionMadness28/" target="_blank" rel="noopener">Vote on Instagram</a>
+    <div class="count" data-sel="2027-02-07T19:00:00-06:00"><b id="cd">—</b><span>until the Selection Show · Sun Feb 7, 2027 · 7 PM CT</span></div></div>
+  </div>
+</section>
+<main>
+<section id="groups"><h2>This week's groups</h2>
+  <p class="sub">Week 1 of 12 · Oct 5 – 11 · voting closes Sunday 9 PM CT</p>
+  <div class="grid2"><article class="gcard blue">
+      <header><span>Blue · Group 1</span><span>Oct 5 – 11</span></header>
+      <ol><li class=""><span class="nm">J.B. Pritzker</span>
+        <span class="of">Governor, Illinois</span><span class="pc"></span>
+        </li><li class=""><span class="nm">Raphael Warnock</span>
+        <span class="of">U.S. Senator, Georgia</span><span class="pc"></span>
+        </li><li class=""><span class="nm">Beto O&#x27;Rourke</span>
+        <span class="of">Former U.S. Rep., Texas</span><span class="pc"></span>
+        </li><li class=""><span class="nm">Maura Healey</span>
+        <span class="of">Governor, Massachusetts</span><span class="pc"></span>
+        </li></ol></article><article class="gcard red">
+      <header><span>Red · Group 1</span><span>Oct 5 – 11</span></header>
+      <ol><li class=""><span class="nm">Nikki Haley</span>
+        <span class="of">Former U.N. Ambassador</span><span class="pc"></span>
+        </li><li class=""><span class="nm">Rick Scott</span>
+        <span class="of">U.S. Senator, Florida</span><span class="pc"></span>
+        </li><li class=""><span class="nm">Mike Lee</span>
+        <span class="of">U.S. Senator, Utah</span><span class="pc"></span>
+        </li><li class=""><span class="nm">Robert F. Kennedy Jr.</span>
+        <span class="of">Health and Human Services Secretary</span><span class="pc"></span>
+        </li></ol></article></div>
+  <p class="note">Percentages are each name's share of counted comments. One counted comment per account.</p>
+</section>
+<section id="standings"><h2>Standings</h2><div class="grid2">
+  <div><h3 class="bh">Blue side</h3><p class="empty">First results land Sunday, Oct 11.</p></div>
+  <div><h3 class="rh">Red side</h3><p class="empty">First results land Sunday, Oct 11.</p></div></div></section>
+<section id="schedule"><h2>Schedule</h2>
+  <div class="scroll"><table class="sched"><thead><tr><th>Week</th><th>Dates</th><th>Blue group</th><th>Red group</th><th></th></tr></thead><tbody><tr class="soon"><td>1</td><td>Oct 5 – 11</td><td><b>J.B. Pritzker</b> <span>+3</span></td>
+    <td><b>Nikki Haley</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>2</td><td>Oct 12 – 18</td><td><b>Cory Booker</b> <span>+3</span></td>
+    <td><b>Vivek Ramaswamy</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>3</td><td>Oct 19 – 25</td><td><b>Gavin Newsom</b> <span>+3</span></td>
+    <td><b>Tim Scott</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>4</td><td>Oct 26 – Nov 1</td><td><b>Pete Buttigieg</b> <span>+3</span></td>
+    <td><b>Josh Hawley</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>5</td><td>Nov 2 – 8</td><td><b>Andy Beshear</b> <span>+3</span></td>
+    <td><b>Donald Trump Jr.</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>6</td><td>Nov 9 – 15</td><td><b>Gretchen Whitmer</b> <span>+3</span></td>
+    <td><b>Greg Abbott</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>7</td><td>Nov 16 – 22</td><td><b>Ruben Gallego</b> <span>+3</span></td>
+    <td><b>Ron DeSantis</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>8</td><td>Nov 23 – 29</td><td><b>Josh Shapiro</b> <span>+3</span></td>
+    <td><b>Ted Cruz</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>9</td><td>Nov 30 – Dec 6</td><td><b>Mark Kelly</b> <span>+3</span></td>
+    <td><b>Brian Kemp</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>10</td><td>Dec 7 – 13</td><td><b>Wes Moore</b> <span>+3</span></td>
+    <td><b>JD Vance</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>11</td><td>Dec 14 – 20</td><td><b>Alexandria Ocasio-Cortez</b> <span>+3</span></td>
+    <td><b>Marco Rubio</b> <span>+3</span></td><td>Upcoming</td></tr><tr class="soon"><td>12</td><td>Dec 21 – 27</td><td><b>Kamala Harris</b> <span>+3</span></td>
+    <td><b>Glenn Youngkin</b> <span>+3</span></td><td>Upcoming</td></tr></tbody></table></div>
+  <ol class="phases"><li><b>Launch &amp; write-ins</b><span>Oct 1 – 4, 2026</span><p>Launch posts go up. The two most-requested write-ins per side join the field.</p></li><li><b>Group stage</b><span>Oct 5 – Dec 27, 2026</span><p>12 weeks. One Blue and one Red group per week; each vote runs Monday to Sunday. Group winner qualifies.</p></li><li><b>Play-in</b><span>Jan 4 – 10, 2027</span><p>The two write-ins on each side go head to head.</p></li><li><b>Bubble Weeks</b><span>Jan 11 – 24, 2027</span><p>Top 7 runners-up plus the play-in winner, head to head. Four wildcards per side.</p></li><li><b>Seeding Series</b><span>Jan 25 – 31, 2027</span><p>Power polls rank the 16 qualifiers per side.</p></li><li><b>Selection Show</b><span>Sun Feb 7, 2027, 7 PM CT</span><p>Live on Instagram. Both hypothetical brackets revealed.</p></li><li><b>Hypothetical bracket</b><span>Feb 15 – Apr 5, 2027</span><p>Week-long games. Champion crowned Apr 5, the night of the NCAA title game.</p></li><li><b>Lock Watch → Season 1</b><span>As candidates declare</span><p>Declared candidates get LOCKED. When the real fields are set, Season 1 runs on the 2028 primary calendar.</p></li></ol></section>
+<section id="field"><h2>The 100</h2>
+  <p class="sub">48 names per side from public 2028 watch lists, plus 2 write-ins chosen by our followers. Groups were set by random draw.</p>
+  <div class="grid2"><div><h3 class="bh">Blue side</h3><h4>Heavyweights · 12</h4><ul class="fl"><li><b>Gavin Newsom</b><span>Governor, California</span></li><li><b>Kamala Harris</b><span>Former Vice President</span></li><li><b>Alexandria Ocasio-Cortez</b><span>U.S. Rep., New York</span></li><li><b>Josh Shapiro</b><span>Governor, Pennsylvania</span></li><li><b>Pete Buttigieg</b><span>Former Transportation Secretary</span></li><li><b>Gretchen Whitmer</b><span>Governor, Michigan</span></li><li><b>J.B. Pritzker</b><span>Governor, Illinois</span></li><li><b>Andy Beshear</b><span>Governor, Kentucky</span></li><li><b>Wes Moore</b><span>Governor, Maryland</span></li><li><b>Cory Booker</b><span>U.S. Senator, New Jersey</span></li><li><b>Mark Kelly</b><span>U.S. Senator, Arizona</span></li><li><b>Ruben Gallego</b><span>U.S. Senator, Arizona</span></li></ul><h4>Contenders · 12</h4><ul class="fl"><li><b>Ro Khanna</b><span>U.S. Rep., California</span></li><li><b>Elissa Slotkin</b><span>U.S. Senator, Michigan</span></li><li><b>Chris Murphy</b><span>U.S. Senator, Connecticut</span></li><li><b>Jared Polis</b><span>Governor, Colorado</span></li><li><b>Raphael Warnock</b><span>U.S. Senator, Georgia</span></li><li><b>Amy Klobuchar</b><span>U.S. Senator, Minnesota</span></li><li><b>Jon Ossoff</b><span>U.S. Senator, Georgia</span></li><li><b>Chris Van Hollen</b><span>U.S. Senator, Maryland</span></li><li><b>Roy Cooper</b><span>Former Governor, North Carolina</span></li><li><b>Rahm Emanuel</b><span>Former Ambassador to Japan</span></li><li><b>Phil Murphy</b><span>Former Governor, New Jersey</span></li><li><b>Mitch Landrieu</b><span>Former Mayor, New Orleans</span></li></ul><h4>Long shots · 24</h4><ul class="fl"><li><b>Bernie Sanders</b><span>U.S. Senator, Vermont</span></li><li><b>Jasmine Crockett</b><span>U.S. Rep., Texas</span></li><li><b>Mark Cuban</b><span>Entrepreneur</span></li><li><b>Stephen A. Smith</b><span>ESPN commentator</span></li><li><b>John Fetterman</b><span>U.S. Senator, Pennsylvania</span></li><li><b>Andy Kim</b><span>U.S. Senator, New Jersey</span></li><li><b>Josh Stein</b><span>Governor, North Carolina</span></li><li><b>Sherrod Brown</b><span>Former U.S. Senator, Ohio</span></li><li><b>Gina Raimondo</b><span>Former Commerce Secretary</span></li><li><b>Hakeem Jeffries</b><span>House Democratic Leader</span></li><li><b>Jeff Jackson</b><span>Attorney General, North Carolina</span></li><li><b>James Talarico</b><span>Texas state Representative</span></li><li><b>Adam Schiff</b><span>U.S. Senator, California</span></li><li><b>Jamie Raskin</b><span>U.S. Rep., Maryland</span></li><li><b>Tammy Duckworth</b><span>U.S. Senator, Illinois</span></li><li><b>Maura Healey</b><span>Governor, Massachusetts</span></li><li><b>Mallory McMorrow</b><span>Michigan state Senator</span></li><li><b>Beto O&#x27;Rourke</b><span>Former U.S. Rep., Texas</span></li><li><b>Dean Phillips</b><span>Former U.S. Rep., Minnesota</span></li><li><b>Marianne Williamson</b><span>Author, past candidate</span></li><li><b>Jon Tester</b><span>Former U.S. Senator, Montana</span></li><li><b>Josh Green</b><span>Governor, Hawaii</span></li><li><b>Jon Stewart</b><span>Comedian, Daily Show host</span></li><li><b>Kathy Hochul</b><span>Governor, New York</span></li></ul><h4>Write-ins · 2</h4><ul class="fl"><li><b>Write-in #1</b><span>Picked by comments, Oct 1–4</span></li><li><b>Write-in #2</b><span>Picked by comments, Oct 1–4</span></li></ul></div><div><h3 class="rh">Red side</h3><h4>Heavyweights · 12</h4><ul class="fl"><li><b>JD Vance</b><span>Vice President</span></li><li><b>Marco Rubio</b><span>Secretary of State</span></li><li><b>Ron DeSantis</b><span>Governor, Florida</span></li><li><b>Donald Trump Jr.</b><span>Businessman</span></li><li><b>Nikki Haley</b><span>Former U.N. Ambassador</span></li><li><b>Glenn Youngkin</b><span>Former Governor, Virginia</span></li><li><b>Brian Kemp</b><span>Governor, Georgia</span></li><li><b>Ted Cruz</b><span>U.S. Senator, Texas</span></li><li><b>Josh Hawley</b><span>U.S. Senator, Missouri</span></li><li><b>Vivek Ramaswamy</b><span>Entrepreneur</span></li><li><b>Greg Abbott</b><span>Governor, Texas</span></li><li><b>Tim Scott</b><span>U.S. Senator, South Carolina</span></li></ul><h4>Contenders · 12</h4><ul class="fl"><li><b>Byron Donalds</b><span>U.S. Rep., Florida</span></li><li><b>Elise Stefanik</b><span>U.S. Rep., New York</span></li><li><b>Sarah Huckabee Sanders</b><span>Governor, Arkansas</span></li><li><b>Rand Paul</b><span>U.S. Senator, Kentucky</span></li><li><b>Tom Cotton</b><span>U.S. Senator, Arkansas</span></li><li><b>Tulsi Gabbard</b><span>Director of National Intelligence</span></li><li><b>Pete Hegseth</b><span>Secretary of Defense</span></li><li><b>Kristi Noem</b><span>Former Homeland Security Secretary</span></li><li><b>Rick Scott</b><span>U.S. Senator, Florida</span></li><li><b>Mike Braun</b><span>Governor, Indiana</span></li><li><b>Thomas Massie</b><span>Former U.S. Rep., Kentucky</span></li><li><b>Greg Bovino</b><span>Former Border Patrol commander</span></li></ul><h4>Long shots · 24</h4><ul class="fl"><li><b>Royce White</b><span>Former NBA player</span></li><li><b>Steve Bannon</b><span>Former White House strategist</span></li><li><b>Tucker Carlson</b><span>Media host</span></li><li><b>Marjorie Taylor Greene</b><span>Former U.S. Rep., Georgia</span></li><li><b>Kari Lake</b><span>Former Arizona TV anchor</span></li><li><b>Robert F. Kennedy Jr.</b><span>Health and Human Services Secretary</span></li><li><b>Doug Burgum</b><span>Interior Secretary</span></li><li><b>Chris Sununu</b><span>Former Governor, New Hampshire</span></li><li><b>Mike Pence</b><span>Former Vice President</span></li><li><b>Katie Britt</b><span>U.S. Senator, Alabama</span></li><li><b>Jim Jordan</b><span>U.S. Rep., Ohio</span></li><li><b>Mike Johnson</b><span>Speaker of the House</span></li><li><b>Kevin Stitt</b><span>Governor, Oklahoma</span></li><li><b>Spencer Cox</b><span>Governor, Utah</span></li><li><b>Jeff Landry</b><span>Governor, Louisiana</span></li><li><b>Matt Gaetz</b><span>Former U.S. Rep., Florida</span></li><li><b>Eric Trump</b><span>Trump Organization executive</span></li><li><b>Nancy Mace</b><span>U.S. Rep., South Carolina</span></li><li><b>Mike Lee</b><span>U.S. Senator, Utah</span></li><li><b>Liz Cheney</b><span>Former U.S. Rep., Wyoming</span></li><li><b>Dave Portnoy</b><span>Barstool Sports founder</span></li><li><b>Ben Carson</b><span>Former HUD Secretary</span></li><li><b>Eric Schmitt</b><span>U.S. Senator, Missouri</span></li><li><b>Lara Trump</b><span>Media host</span></li></ul><h4>Write-ins · 2</h4><ul class="fl"><li><b>Write-in #1</b><span>Picked by comments, Oct 1–4</span></li><li><b>Write-in #2</b><span>Picked by comments, Oct 1–4</span></li></ul></div></div></section>
+<section id="rules"><h2>How it works</h2>
+  <div class="grid3">
+    <div class="rule"><b>1 · Your comment is your vote</b><p>Comment one name from the group plus a reason on that group's Instagram post. One counted comment per account. Voting runs Monday 10 AM to Sunday 9 PM CT.</p></div>
+    <div class="rule"><b>2 · One survives</b><p>The name with the biggest share of counted comments wins the group and qualifies. Runners-up go to the bubble race for four wildcards per side.</p></div>
+    <div class="rule"><b>3 · Lock Watch</b><p>When someone formally announces a 2028 run they get a LOCKED tag. If they rule it out, they're marked OUT. When the real fields are set, Season 1 runs on the 2028 primary calendar.</p></div>
+  </div>
+  <div class="fine">
+    <p><b>Counting rules.</b> Accounts under 30 days old or with no posts don't count. A group with a sudden flood of comments is reviewed before it's final. Ties go to the most-liked argument.</p>
+    <p><b>Corrections.</b> If we get a fact wrong, we fix the card and pin the correction.</p>
+    <p><b>This is a fan game, not a poll.</b> The score measures who shows up to argue. Election Madness is not affiliated with any party, campaign, or the NCAA.</p>
+  </div>
+</section>
+</main>
+<footer><span>Election Madness 2028 · a project of <a href="https://mrearthrebirth.com">Mr. Earth Rebirth</a></span>
+<span>Updated Sep 23, 2026 · <a href="https://www.instagram.com/ElectionMadness28/">@ElectionMadness28</a></span></footer>
 <script>
-// Election Madness 2028 client. Reads public tables with the anon key; the only write is
-// one vote row per matchup per voter, enforced by the database policy (em_vote_ok).
-const SB = window.EM_SUPABASE_URL || 'https://hbpurggayqtjshwlwmet.supabase.co';
-const KEY = window.EM_SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhicHVyZ2dheXF0anNod2x3bWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMTc1MjksImV4cCI6MjA5Njc5MzUyOX0.06N-pFLMtJNRkfB45pgSMtlc61NPy1EkVD-QADTJl6I';
-const H = { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' };
-const $ = (s) => document.querySelector(s);
-const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-
-function voterId() {
-  try {
-    let v = localStorage.getItem('em_voter');
-    if (!v) { v = crypto.randomUUID().replace(/-/g, ''); localStorage.setItem('em_voter', v); }
-    return v;
-  } catch { return (window.__emVoter ||= crypto.randomUUID().replace(/-/g, '')); }
-}
-function myVotes() { try { return JSON.parse(localStorage.getItem('em_votes') || '{}'); } catch { return {}; } }
-function remember(m, c) { const v = myVotes(); v[m] = c; try { localStorage.setItem('em_votes', JSON.stringify(v)); } catch {} }
-
-async function get(path) {
-  const r = await fetch(SB + '/rest/v1/' + path, { headers: H });
-  if (!r.ok) throw new Error(path + ' ' + r.status);
-  return r.json();
-}
-let D = null;
-async function load() {
-  const [cands, rounds, matchups, tallies] = await Promise.all([
-    get('em_candidates?select=*&order=party,seed'),
-    get('em_rounds?select=*&order=sort'),
-    get('em_matchups?select=*&order=sort'),
-    get('em_tallies?select=*'),
-  ]);
-  const C = Object.fromEntries(cands.map(c => [c.id, c]));
-  const T = Object.fromEntries(tallies.map(t => [t.matchup_id, t]));
-  const now = Date.now();
-  for (const r of rounds) {
-    r.open = now >= Date.parse(r.opens_at) && now <= Date.parse(r.closes_at);
-    r.past = now > Date.parse(r.closes_at);
-    r.matchups = matchups.filter(m => m.round_id === r.id).map(m => ({ ...m, t: T[m.id] || { a_votes: 0, b_votes: 0 } }));
-  }
-  D = { C, rounds };
-  return D;
-}
-
-const fmtDate = (s) => new Date(s).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', timeZone: 'America/Chicago' }) + ' CT';
-function left(s) {
-  const ms = Date.parse(s) - Date.now(); if (ms <= 0) return 'closed';
-  const h = Math.floor(ms / 36e5); if (h >= 48) return Math.floor(h / 24) + ' days left';
-  if (h >= 1) return h + ' hours left'; return Math.max(1, Math.floor(ms / 6e4)) + ' min left';
-}
-
-function matchCard(m, r) {
-  const a = D.C[m.a_id], b = D.C[m.b_id];
-  const av = +m.t.a_votes, bv = +m.t.b_votes, tot = av + bv;
-  const pa = tot ? Math.round(av / tot * 100) : 50, pb = tot ? 100 - pa : 50;
-  const mine = myVotes()[m.id];
-  const decided = !!m.winner_id || r.past;
-  const win = m.winner_id || (decided && tot ? (av >= bv ? a.id : b.id) : null);
-  const party = a.party;
-  const cand = (c, v, p) => `<button class="cand ${mine === c.id ? 'mine' : ''} ${win === c.id ? 'win' : ''}" data-m="${m.id}" data-c="${c.id}" ${(!r.open || mine || decided) ? 'disabled' : ''}>
-      <span class="seed">${c.seed ?? ''}</span>
-      <span><div class="nm">${esc(c.name)}</div><div class="tt">${esc(c.title || '')}${c.status === 'locked' ? ' · Locked in' : c.status === 'out' ? ' · Out' : ''}</div></span>
-      <span class="pct">${tot || decided ? p + '%' : ''}</span></button>`;
-  return `<div class="match" id="m-${m.id}">
-    <div class="hd"><span class="lbl ${party}">${party === 'blue' ? 'Blue' : 'Red'} bracket</span><span class="lbl">${tot} vote${tot === 1 ? '' : 's'}</span></div>
-    ${cand(a, av, pa)}
-    <div class="bar ${party}"><b style="width:${pa}%"></b></div>
-    ${cand(b, bv, pb)}
-    <div class="meta"><span>${decided ? 'Final' : r.open ? 'Open' : 'Opens ' + fmtDate(r.opens_at)}</span><span>${decided ? (win ? esc(D.C[win].name) + ' advances' : 'No votes') : r.open ? left(r.closes_at) : ''}</span></div>
-  </div>`;
-}
-function roundBlock(r, showAll) {
-  const ms = showAll ? r.matchups : r.matchups;
-  return `<section class="round"><div class="rh"><h2>${esc(r.name)}</h2><span class="note">${fmtDate(r.opens_at)} to ${fmtDate(r.closes_at)}</span></div>
-    <div class="grid">${ms.map(m => matchCard(m, r)).join('')}</div></section>`;
-}
-
-const V = {
-  now() {
-    const open = D.rounds.filter(r => r.open);
-    const next = D.rounds.find(r => !r.open && !r.past);
-    if (!open.length) return `<h1>The field is set.</h1><p class="sub">${next ? 'Voting opens ' + fmtDate(next.opens_at) + '.' : 'No rounds scheduled.'}</p>${next ? roundBlock(next) : ''}`;
-    const r = open[0];
-    return `<div class="status"><i></i>Voting open · ${left(r.closes_at)}</div>
-      <h1>Who advances?</h1><p class="sub">Tap a name to cast your vote. One vote per matchup. Results lock ${fmtDate(r.closes_at)} and the winners move on.</p>
-      ${open.map(x => roundBlock(x)).join('')}`;
-  },
-  bracket() {
-    const total = D.rounds.reduce((n, r) => n + r.matchups.reduce((k, m) => k + (+m.t.a_votes) + (+m.t.b_votes), 0), 0);
-    const cands = Object.values(D.C);
-    return `<h1>The bracket</h1><p class="sub">Every round, every matchup, from the first week to the final. Winners carry forward.</p>
-      <div class="kpi"><div><span class="lbl">Contenders</span><div class="v">${cands.length}</div></div>
-      <div><span class="lbl">Blue</span><div class="v">${cands.filter(c => c.party === 'blue').length}</div></div>
-      <div><span class="lbl">Red</span><div class="v">${cands.filter(c => c.party === 'red').length}</div></div>
-      <div><span class="lbl">Votes cast</span><div class="v">${total.toLocaleString()}</div></div></div>
-      ${D.rounds.map(r => roundBlock(r)).join('') || '<div class="empty">No rounds yet</div>'}`;
-  },
-  results() {
-    const done = D.rounds.filter(r => r.past || r.matchups.some(m => m.winner_id));
-    return `<h1>Results</h1><p class="sub">Closed rounds and who advanced.</p>${done.map(r => roundBlock(r)).join('') || '<div class="empty">No round has closed yet. The first results show follows the first Sunday close.</div>'}`;
-  },
-  how() {
-    return `<div class="how"><h1>How it works</h1>
-      <p>Election Madness is a public bracket of the people most likely to run for president in 2028, run like a tournament. The bracket is hypothetical until candidates declare; when someone announces, they are locked in, and when someone rules it out, they are out.</p>
-      <ol>
-        <li>Each round opens Monday at 10 AM Central and closes Sunday at 9 PM Central.</li>
-        <li>Pick one name in each matchup. One vote per matchup per device.</li>
-        <li>The name with more votes at close advances. Ties go to the higher seed.</li>
-        <li>Sunday night is the results show on <a href="https://instagram.com/ElectionMadness28" rel="noopener">@ElectionMadness28</a>.</li>
-      </ol>
-      <p>Blue and red brackets run side by side and never meet until the final. Seeds come from the preseason social polls.</p></div>`;
-  },
-};
-
-function route() {
-  const r = (location.hash.replace('#', '') || 'now').split('/')[0];
-  const view = V[r] ? r : 'now';
-  document.querySelectorAll('nav a').forEach(a => a.classList.toggle('on', a.dataset.r === view));
-  $('#main').innerHTML = V[view]();
-}
-function toast(s) { const t = $('#toast'); t.textContent = s; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 2200); }
-
-async function vote(mid, cid) {
-  const r = await fetch(SB + '/rest/v1/em_votes', { method: 'POST', headers: { ...H, Prefer: 'return=minimal' }, body: JSON.stringify({ matchup_id: mid, candidate_id: cid, voter: voterId() }) });
-  if (r.status === 201) { remember(mid, cid); return true; }
-  if (r.status === 409) { remember(mid, cid); toast('You already voted in this matchup'); return false; }
-  const e = await r.text(); toast(/row-level security/i.test(e) ? 'This matchup is closed' : 'Vote did not go through'); return false;
-}
-document.addEventListener('click', async (ev) => {
-  const b = ev.target.closest('.cand'); if (!b || b.disabled) return;
-  b.disabled = true;
-  if (await vote(b.dataset.m, b.dataset.c)) { toast('Vote counted'); await load(); route(); }
-  else { b.disabled = false; }
-});
-window.addEventListener('hashchange', route);
-load().then(route).catch(e => { $('#main').innerHTML = `<div class="empty">Could not load the bracket. ${esc(e.message)}</div>`; });
-setInterval(() => load().then(route).catch(() => {}), 60000);
+(function(){const el=document.getElementById('cd'),t=new Date(document.querySelector('.count').dataset.sel).getTime();
+function tick(){const ms=t-Date.now();if(ms<=0){el.textContent='LIVE';return;}
+const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);el.textContent=d+'d '+String(h).padStart(2,'0')+'h '+String(m).padStart(2,'0')+'m';}
+tick();setInterval(tick,30000);})();
 </script>
-</body>
-</html>
+</body></html>
