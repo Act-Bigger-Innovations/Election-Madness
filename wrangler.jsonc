@@ -1,0 +1,7 @@
+{
+  // Cloudflare Worker "electionmadness2028" serves site/ as static assets.
+  // Workers Builds deploys this on every push to main; no build command.
+  "name": "electionmadness2028",
+  "compatibility_date": "2026-09-24",
+  "assets": { "directory": "./site", "not_found_handling": "404-page" }
+}
