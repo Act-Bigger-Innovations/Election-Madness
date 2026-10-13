@@ -38,5 +38,11 @@ if (!(await page.locator('#m-d1 .meta').textContent()).includes('Andy Beshear ad
 const wide = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth); if (wide) fail('horizontal scroll at 390px');
 fs.mkdirSync(path.join(root, 'test/shots'), { recursive: true });
 await page.goto('http://localhost:8790/#now'); await page.waitForSelector('.match'); await page.screenshot({ path: path.join(root, 'test/shots/now-phone.png'), fullPage: true });
+await ctx.grantPermissions(['clipboard-read','clipboard-write']);
+await page.goto('http://localhost:8790/#bracket/l2'); await page.waitForSelector('.match');
+if (!(await page.locator('#m-l2').getAttribute('class')).includes('hl')) fail('deep link should highlight the matchup');
+await page.evaluate(() => { navigator.share = undefined; });
+await page.locator('.share[data-share="l1"]').click(); await page.waitForTimeout(200);
+const clip = await page.evaluate(() => navigator.clipboard.readText()); if (!clip.endsWith('#bracket/l1')) fail('share should copy a deep link, got ' + clip);
 if (errors.length) fail('console errors: ' + errors.join(' | '));
 console.log(process.exitCode ? 'smoke FAILED' : 'smoke ok'); await browser.close(); srv.close();
