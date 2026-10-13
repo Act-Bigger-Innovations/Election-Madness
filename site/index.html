@@ -54,6 +54,9 @@ h2{font:700 22px/1.1 Outfit;margin:28px 0 12px;letter-spacing:-.01em}
 .bar b{display:block;height:100%}
 .bar.blue b{background:var(--blue)} .bar.red b{background:var(--red)}
 .meta{display:flex;justify-content:space-between;color:var(--ink3);font-size:12px}
+.share{align-self:flex-start;padding:6px 0 0;font:600 11px/1 Inter;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.share:hover{color:var(--ink)}
+.match.hl{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,197,66,.18)}
 .note{color:var(--ink3);font-size:13px}
 .round{margin-bottom:26px}
 .round .rh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 10px}
@@ -153,6 +156,7 @@ function matchCard(m, r) {
     <div class="bar ${party}"><b style="width:${pa}%"></b></div>
     ${cand(b, bv, pb)}
     <div class="meta"><span>${decided ? 'Final' : r.open ? 'Open' : 'Opens ' + fmtDate(r.opens_at)}</span><span>${decided ? (win ? esc(D.C[win].name) + ' advances' : 'No votes') : r.open ? left(r.closes_at) : ''}</span></div>
+    <button class="share" data-share="${m.id}" data-title="${esc(a.name)} vs ${esc(b.name)}">Share this matchup</button>
   </div>`;
 }
 function roundBlock(r, showAll) {
@@ -199,10 +203,17 @@ const V = {
 };
 
 function route() {
-  const r = (location.hash.replace('#', '') || 'now').split('/')[0];
-  const view = V[r] ? r : 'now';
+  const parts = (location.hash.replace('#', '') || 'now').split('/');
+  const view = V[parts[0]] ? parts[0] : 'now';
   document.querySelectorAll('nav a').forEach(a => a.classList.toggle('on', a.dataset.r === view));
   $('#main').innerHTML = V[view]();
+  if (parts[1]) { const el = document.getElementById('m-' + parts[1]); if (el) { el.classList.add('hl'); if (!route.scrolled) { el.scrollIntoView({ block: 'center' }); route.scrolled = true; } } }
+}
+async function share(id, title) {
+  const url = location.origin + location.pathname + '#bracket/' + id;
+  const text = title + ' is on the ballot. Cast your vote in Election Madness 2028.';
+  try { if (navigator.share) { await navigator.share({ title: 'Election Madness 2028', text, url }); return; } } catch { return; }
+  try { await navigator.clipboard.writeText(url); toast('Link copied'); } catch { toast(url); }
 }
 function toast(s) { const t = $('#toast'); t.textContent = s; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 2200); }
 
@@ -213,6 +224,7 @@ async function vote(mid, cid) {
   const e = await r.text(); toast(/row-level security/i.test(e) ? 'This matchup is closed' : 'Vote did not go through'); return false;
 }
 document.addEventListener('click', async (ev) => {
+  const sh = ev.target.closest('.share'); if (sh) return share(sh.dataset.share, sh.dataset.title);
   const b = ev.target.closest('.cand'); if (!b || b.disabled) return;
   b.disabled = true;
   if (await vote(b.dataset.m, b.dataset.c)) { toast('Vote counted'); await load(); route(); }
