@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voter Registration — Election Madness 2028</title>
+<meta name="description" content="Check your voter registration status and register to vote. Election Madness tracks how many people we help register.">
+<meta name="theme-color" content="#141923">
+<link rel="icon" href="../favicon.ico"><link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Chivo+Mono:wght@500;700&family=Public+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="../style.css">
+<style>
+.reg-hero{background:linear-gradient(135deg,#243150,#0E1220);color:var(--paper);padding:clamp(40px,7vw,84px) clamp(16px,4vw,40px)}
+.reg-hero h1{font-size:clamp(48px,8vw,96px)}
+.steps{display:grid;gap:20px;margin:32px 0;max-width:640px}
+.step{background:var(--paper);border:2px solid var(--ink);border-radius:6px;padding:20px}
+.step-num{font-family:var(--m);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.step h3{font-family:var(--d);font-size:22px;text-transform:uppercase;line-height:1;margin:0 0 8px}
+.step p{color:var(--ink2);font-size:15px;margin:0}
+.state-section{margin:40px 0 0;max-width:100%;overflow:hidden}
+.state-label{font-family:var(--m);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:block}
+.states{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:20px;width:100%;overflow:hidden}
+@media(min-width:520px){.states{grid-template-columns:1fr 1fr}}
+.state-opt{display:block;width:calc(100% - 28px);text-align:left;padding:12px 14px;background:var(--paper);border:2px solid var(--ink);border-radius:4px;font:15px var(--b);color:var(--ink);cursor:pointer;text-decoration:none;transition:all .15s}
+.state-opt:hover{background:var(--rule);border-color:var(--ink2)}
+.state-opt:active{transform:scale(.98)}
+.cta-section{margin:32px 0 0}
+.register-btn{display:inline-block;background:var(--led);color:var(--board);font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:16px;padding:16px 24px;border-radius:4px;text-decoration:none;border:none;cursor:pointer;font:inherit}
+.register-btn:hover{filter:brightness(1.06)}
+.register-btn:disabled{opacity:.5;cursor:not-allowed}
+.count-display{font-family:var(--m);font-size:18px;font-weight:700;color:var(--led);margin-top:16px;min-height:24px}
+.thanks{background:var(--ok);color:white;padding:20px;border-radius:6px;margin-top:20px;text-align:center;font-weight:600}
+@media(max-width:520px){
+  .register-btn{width:100%;font-size:15px;padding:14px 18px}
+  .state-opt{font-size:14px;padding:10px 12px}
+}
+</style>
+</head><body>
+<header class="top">
+  <a class="brand" href="/"><svg viewBox="0 0 512 512" class="mk" aria-hidden="true"><defs><linearGradient id="mk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#243150"/><stop offset="1" stop-color="#0E1220"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#mk)"/><path d="M118 150 H236 V362 H118 M236 256 H282 L334 308 L424 188" fill="none" stroke="#FFB21A" stroke-width="46" stroke-linecap="square" transform="translate(-14 0)"/></svg><span><b class="b">ELECTION</b> <b class="r">MADNESS</b> <i>'28</i><small>Bracket the ballot.</small></span></a>
+  <nav><a href="/#groups">This week</a><a href="/#standings">Standings</a><a href="/#schedule">Schedule</a><a href="/#field">The 100</a><a href="/#rules">Rules</a><a href="/vote/">Vote</a>
+  <a class="btn ghost" href="/register">Register</a><a class="btn" href="https://www.instagram.com/ElectionMadness28/" target="_blank" rel="noopener">Vote on Instagram</a></nav>
+</header>
+<section class="reg-hero">
+  <div class="hwrap">
+    <h1>Make your vote count.</h1>
+    <p class="lede">First, register. Then vote. Election Madness will track how many people register.</p>
+  </div>
+</section>
+<main>
+  <section>
+    <div class="hwrap" style="max-width:640px">
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">Step 1</span>
+          <h3>Check your status</h3>
+          <p>Not sure if you're registered? Use your state's lookup tool below.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">Step 2</span>
+          <h3>Register or confirm</h3>
+          <p>If you're not registered, follow the link to register in your state.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">Step 3</span>
+          <h3>Tell us</h3>
+          <p>Tap the button below and we'll count you. Your registration is self-reported and helps track our impact.</p>
+        </div>
+      </div>
+
+      <div class="state-section">
+        <label class="state-label">Select your state</label>
+        <div class="states" id="states"></div>
+      </div>
+
+      <div class="cta-section">
+        <button class="register-btn" id="register-btn" disabled>I registered</button>
+        <div class="count-display">Registered: <b id="count">—</b> people</div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><span>Election Madness 2028 · a project of <a href="https://mrearthrebirth.com">Mr. Earth Rebirth</a></span>
+<span>Updated Oct 15, 2026 · <a href="https://www.instagram.com/ElectionMadness28/">@ElectionMadness28</a></span></footer>
+<script>
+const SB = window.EM_SUPABASE_URL || 'https://hbpurggayqtjshwlwmet.supabase.co';
+const KEY = window.EM_SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhicHVyZ2dheXF0anNod2x3bWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMTc1MjksImV4cCI6MjA5Njc5MzUyOX0.06N-pFLMtJNRkfB45pgSMtlc61NPy1EkVD-QADTJl6I';
+const H = { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' };
+const states = [
+  { name: 'Alabama', code: 'AL', url: 'https://vote.gov/alabama' },
+  { name: 'Alaska', code: 'AK', url: 'https://vote.gov/alaska' },
+  { name: 'Arizona', code: 'AZ', url: 'https://vote.gov/arizona' },
+  { name: 'Arkansas', code: 'AR', url: 'https://vote.gov/arkansas' },
+  { name: 'California', code: 'CA', url: 'https://vote.gov/california' },
+  { name: 'Colorado', code: 'CO', url: 'https://vote.gov/colorado' },
+  { name: 'Connecticut', code: 'CT', url: 'https://vote.gov/connecticut' },
+  { name: 'Delaware', code: 'DE', url: 'https://vote.gov/delaware' },
+  { name: 'District of Columbia', code: 'DC', url: 'https://vote.gov/district-of-columbia' },
+  { name: 'Florida', code: 'FL', url: 'https://vote.gov/florida' },
+  { name: 'Georgia', code: 'GA', url: 'https://vote.gov/georgia' },
+  { name: 'Hawaii', code: 'HI', url: 'https://vote.gov/hawaii' },
+  { name: 'Idaho', code: 'ID', url: 'https://vote.gov/idaho' },
+  { name: 'Illinois', code: 'IL', url: 'https://vote.gov/illinois' },
+  { name: 'Indiana', code: 'IN', url: 'https://vote.gov/indiana' },
+  { name: 'Iowa', code: 'IA', url: 'https://vote.gov/iowa' },
+  { name: 'Kansas', code: 'KS', url: 'https://vote.gov/kansas' },
+  { name: 'Kentucky', code: 'KY', url: 'https://vote.gov/kentucky' },
+  { name: 'Louisiana', code: 'LA', url: 'https://vote.gov/louisiana' },
+  { name: 'Maine', code: 'ME', url: 'https://vote.gov/maine' },
+  { name: 'Maryland', code: 'MD', url: 'https://vote.gov/maryland' },
+  { name: 'Massachusetts', code: 'MA', url: 'https://vote.gov/massachusetts' },
+  { name: 'Michigan', code: 'MI', url: 'https://vote.gov/michigan' },
+  { name: 'Minnesota', code: 'MN', url: 'https://vote.gov/minnesota' },
+  { name: 'Mississippi', code: 'MS', url: 'https://vote.gov/mississippi' },
+  { name: 'Missouri', code: 'MO', url: 'https://vote.gov/missouri' },
+  { name: 'Montana', code: 'MT', url: 'https://vote.gov/montana' },
+  { name: 'Nebraska', code: 'NE', url: 'https://vote.gov/nebraska' },
+  { name: 'Nevada', code: 'NV', url: 'https://vote.gov/nevada' },
+  { name: 'New Hampshire', code: 'NH', url: 'https://vote.gov/new-hampshire' },
+  { name: 'New Jersey', code: 'NJ', url: 'https://vote.gov/new-jersey' },
+  { name: 'New Mexico', code: 'NM', url: 'https://vote.gov/new-mexico' },
+  { name: 'New York', code: 'NY', url: 'https://vote.gov/new-york' },
+  { name: 'North Carolina', code: 'NC', url: 'https://vote.gov/north-carolina' },
+  { name: 'North Dakota', code: 'ND', url: 'https://vote.gov/north-dakota' },
+  { name: 'Ohio', code: 'OH', url: 'https://vote.gov/ohio' },
+  { name: 'Oklahoma', code: 'OK', url: 'https://vote.gov/oklahoma' },
+  { name: 'Oregon', code: 'OR', url: 'https://vote.gov/oregon' },
+  { name: 'Pennsylvania', code: 'PA', url: 'https://vote.gov/pennsylvania' },
+  { name: 'Rhode Island', code: 'RI', url: 'https://vote.gov/rhode-island' },
+  { name: 'South Carolina', code: 'SC', url: 'https://vote.gov/south-carolina' },
+  { name: 'South Dakota', code: 'SD', url: 'https://vote.gov/south-dakota' },
+  { name: 'Tennessee', code: 'TN', url: 'https://vote.gov/tennessee' },
+  { name: 'Texas', code: 'TX', url: 'https://vote.gov/texas' },
+  { name: 'Utah', code: 'UT', url: 'https://vote.gov/utah' },
+  { name: 'Vermont', code: 'VT', url: 'https://vote.gov/vermont' },
+  { name: 'Virginia', code: 'VA', url: 'https://vote.gov/virginia' },
+  { name: 'Washington', code: 'WA', url: 'https://vote.gov/washington' },
+  { name: 'West Virginia', code: 'WV', url: 'https://vote.gov/west-virginia' },
+  { name: 'Wisconsin', code: 'WI', url: 'https://vote.gov/wisconsin' },
+  { name: 'Wyoming', code: 'WY', url: 'https://vote.gov/wyoming' },
+];
+
+function voterId() {
+  try {
+    let v = localStorage.getItem('em_voter');
+    if (!v) { v = crypto.randomUUID().replace(/-/g, ''); localStorage.setItem('em_voter', v); }
+    return v;
+  } catch { return (window.__emVoter ||= crypto.randomUUID().replace(/-/g, '')); }
+}
+
+let selectedState = null;
+
+async function loadCount() {
+  try {
+    const r = await fetch(SB + '/rest/v1/em_registration_count?select=total', { headers: H });
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    const total = data.length > 0 ? data[0].total : 0;
+    document.getElementById('count').textContent = total.toLocaleString();
+  } catch (e) {
+    document.getElementById('count').textContent = '0';
+  }
+}
+
+async function registerVoter() {
+  if (!selectedState) {
+    alert('Please select your state first');
+    return;
+  }
+
+  const voter = voterId();
+  try {
+    const r = await fetch(SB + '/rest/v1/em_registrations', {
+      method: 'POST',
+      headers: { ...H, Prefer: 'return=minimal' },
+      body: JSON.stringify({ voter, state: selectedState })
+    });
+
+    if (r.status === 201) {
+      const btn = document.getElementById('register-btn');
+      btn.disabled = true;
+      btn.textContent = 'Registered';
+      document.querySelector('.states').style.opacity = '0.5';
+      document.querySelector('.states').style.pointerEvents = 'none';
+
+      const thanks = document.createElement('div');
+      thanks.className = 'thanks';
+      thanks.textContent = 'Thanks for registering! We\'re counting you.';
+      btn.parentElement.appendChild(thanks);
+
+      await new Promise(r => setTimeout(r, 500));
+      await loadCount();
+      return;
+    }
+
+    if (r.status === 409) {
+      const thanks = document.createElement('div');
+      thanks.className = 'thanks';
+      thanks.textContent = 'You\'ve already registered with us. Thanks!';
+      if (!document.querySelector('.thanks')) {
+        document.getElementById('register-btn').parentElement.appendChild(thanks);
+      }
+      await loadCount();
+      return;
+    }
+  } catch (e) {
+    const thanks = document.createElement('div');
+    thanks.className = 'thanks';
+    thanks.style.background = '#BF3A2B';
+    thanks.textContent = 'Thanks for registering! We\'re counting you.';
+    if (!document.querySelector('.thanks')) {
+      document.getElementById('register-btn').parentElement.appendChild(thanks);
+    }
+  }
+}
+
+document.getElementById('register-btn').addEventListener('click', registerVoter);
+
+const statesEl = document.getElementById('states');
+for (const s of states) {
+  const btn = document.createElement('a');
+  btn.href = s.url;
+  btn.target = '_blank';
+  btn.rel = 'noopener';
+  btn.className = 'state-opt';
+  btn.textContent = s.name;
+  btn.addEventListener('click', () => {
+    selectedState = s.code;
+    document.getElementById('register-btn').disabled = false;
+    document.querySelectorAll('.state-opt').forEach(b => b.style.background = 'var(--paper)');
+    btn.style.background = 'var(--rule)';
+  });
+  statesEl.appendChild(btn);
+}
+
+window.addEventListener('DOMContentLoaded', loadCount);
+loadCount();
+</script>
+</body></html>
