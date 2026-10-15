@@ -3,7 +3,8 @@
 import { chromium } from 'playwright';
 import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
 const root = path.resolve(new URL('..', import.meta.url).pathname);
-const html = fs.readFileSync(path.join(root, 'site/vote/index.html'), 'utf8');
+const voteHtml = fs.readFileSync(path.join(root, 'site/vote/index.html'), 'utf8');
+const registerHtml = fs.readFileSync(path.join(root, 'site/register/index.html'), 'utf8');
 const csv = (f) => { const [h, ...r] = fs.readFileSync(path.join(root, 'data', f), 'utf8').trim().split('\n'); const c = h.split(','); return r.map(x => Object.fromEntries(x.split(',').map((v, i) => [c[i], v]))); };
 const now = Date.now();
 const fx = {
@@ -12,8 +13,13 @@ const fx = {
               { id: 'done', name: 'Closed round', opens_at: new Date(now - 36e5 * 200).toISOString(), closes_at: new Date(now - 36e5 * 10).toISOString(), sort: 0 }],
   em_matchups: [{ id: 'l1', round_id: 'live', a_id: 'gavinnewsom', b_id: 'rokhanna', sort: 1 }, { id: 'l2', round_id: 'live', a_id: 'jdvance', b_id: 'randpaul', sort: 2 }, { id: 'd1', round_id: 'done', a_id: 'alexandriaocasiocortez', b_id: 'andybeshear', sort: 1 }],
   em_tallies: [{ matchup_id: 'l1', a_votes: 12, b_votes: 8 }, { matchup_id: 'l2', a_votes: 0, b_votes: 0 }, { matchup_id: 'd1', a_votes: 40, b_votes: 55 }],
+  em_registration_count: [{ total: 42, state: null }],
 };
-const srv = http.createServer((q, s) => { s.writeHead(200, { 'content-type': 'text/html' }); s.end(html); }).listen(8790);
+const srv = http.createServer((q, s) => {
+  const pathname = new URL(q.url, 'http://localhost').pathname;
+  if (pathname === '/register/') { s.writeHead(200, { 'content-type': 'text/html' }); s.end(registerHtml); }
+  else { s.writeHead(200, { 'content-type': 'text/html' }); s.end(voteHtml); }
+}).listen(8790);
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const page = await ctx.newPage();
@@ -35,7 +41,7 @@ if (!(await page.locator('#m-l1 .cand[data-c="rokhanna"]').isDisabled())) fail('
 for (const r of ['bracket', 'results', 'how']) { await page.goto('http://localhost:8790/#' + r); await page.waitForTimeout(200); if ((await page.locator('h1').count()) !== 1) fail(r + ' has no h1'); }
 await page.goto('http://localhost:8790/#results'); await page.waitForTimeout(200);
 if (!(await page.locator('#m-d1 .meta').textContent()).includes('Andy Beshear advances')) fail('closed round should name the winner');
-const wide = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth); if (wide) fail('horizontal scroll at 390px');
+let wideVote = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth); if (wideVote) fail('horizontal scroll at 390px on vote page');
 fs.mkdirSync(path.join(root, 'test/shots'), { recursive: true });
 await page.goto('http://localhost:8790/#now'); await page.waitForSelector('.match'); await page.screenshot({ path: path.join(root, 'test/shots/now-phone.png'), fullPage: true });
 await ctx.grantPermissions(['clipboard-read','clipboard-write']);
@@ -44,5 +50,13 @@ if (!(await page.locator('#m-l2').getAttribute('class')).includes('hl')) fail('d
 await page.evaluate(() => { navigator.share = undefined; });
 await page.locator('.share[data-share="l1"]').click(); await page.waitForTimeout(200);
 const clip = await page.evaluate(() => navigator.clipboard.readText()); if (!clip.endsWith('#bracket/l1')) fail('share should copy a deep link, got ' + clip);
+
+// Test register page at 390px
+await page.goto('http://localhost:8790/register/'); await page.waitForSelector('.state-opt');
+if ((await page.locator('.state-opt').count()) !== 51) fail('should show all 51 states');
+if ((await page.locator('h1').textContent()).includes('Make your vote count') === false) fail('register page should have h1');
+const stateCount = await page.locator('#count').textContent(); if (!stateCount.includes('42')) fail('count should show 42, got ' + stateCount);
+const wideReg = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth); if (wideReg) fail('horizontal scroll at 390px on register page');
+
 if (errors.length) fail('console errors: ' + errors.join(' | '));
 console.log(process.exitCode ? 'smoke FAILED' : 'smoke ok'); await browser.close(); srv.close();

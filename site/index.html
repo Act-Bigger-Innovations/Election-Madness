@@ -14,15 +14,15 @@
 <header class="top">
   <a class="brand" href="/"><svg viewBox="0 0 512 512" class="mk" aria-hidden="true"><defs><linearGradient id="mk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#243150"/><stop offset="1" stop-color="#0E1220"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#mk)"/><path d="M118 150 H236 V362 H118 M236 256 H282 L334 308 L424 188" fill="none" stroke="#FFB21A" stroke-width="46" stroke-linecap="square" transform="translate(-14 0)"/></svg><span><b class="b">ELECTION</b> <b class="r">MADNESS</b> <i>’28</i><small>Bracket the ballot.</small></span></a>
   <nav><a href="#groups">This week</a><a href="#standings">Standings</a><a href="#schedule">Schedule</a><a href="#field">The 100</a><a href="#rules">Rules</a><a href="/vote/">Vote</a>
-  <a class="btn ghost" href="/join">Join</a><a class="btn" href="https://www.instagram.com/ElectionMadness28/" target="_blank" rel="noopener">Vote on Instagram</a></nav>
+  <a class="btn ghost" href="/register">Register</a><a class="btn" href="https://www.instagram.com/ElectionMadness28/" target="_blank" rel="noopener">Vote on Instagram</a></nav>
 </header>
 <section class="hero">
   <div class="hwrap">
     <p class="ey">Hypothetical Season · The Qualifier</p>
     <h1>100 names.<br><span class="a">32 spots.</span><br>You pick.</h1>
     <p class="lede">Nobody has declared for 2028 yet — so this bracket is hypothetical, and the public decides who belongs in it. Every week, two groups of four. Your comment is your vote.</p>
-    <div class="cta"><a class="btn big" href="/join">Get the Monday matchup</a><a class="btn big alt" href="https://www.instagram.com/ElectionMadness28/" target="_blank" rel="noopener">Vote on Instagram</a>
-    <div class="count" data-sel="2027-03-14T19:00:00-05:00"><b id="cd">—</b><span>until the Selection Show · Sun Mar 14, 2027 · 7 PM CT</span></div></div>
+    <div class="cta"><a class="btn big" href="/register">Register to vote</a><a class="btn big alt" href="https://www.instagram.com/ElectionMadness28/" target="_blank" rel="noopener">Vote on Instagram</a>
+    <div class="count" data-sel="2027-03-14T19:00:00-05:00"><b id="cd">—</b><span id="reg-line">until the Selection Show · Sun Mar 14, 2027 · 7 PM CT</span></div></div>
   </div>
 </section>
 <main>
@@ -86,11 +86,30 @@
 </section>
 </main>
 <footer><span>Election Madness 2028 · a project of <a href="https://mrearthrebirth.com">Mr. Earth Rebirth</a></span>
-<span>Updated Oct 13, 2026 · <a href="https://www.instagram.com/ElectionMadness28/">@ElectionMadness28</a></span></footer>
+<span><a href="/register">Register to vote</a> · Updated Oct 15, 2026 · <a href="https://www.instagram.com/ElectionMadness28/">@ElectionMadness28</a></span></footer>
 <script>
-(function(){const el=document.getElementById('cd'),t=new Date(document.querySelector('.count').dataset.sel).getTime();
-function tick(){const ms=t-Date.now();if(ms<=0){el.textContent='LIVE';return;}
-const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);el.textContent=d+'d '+String(h).padStart(2,'0')+'h '+String(m).padStart(2,'0')+'m';}
-tick();setInterval(tick,30000);})();
+(function(){
+  const el=document.getElementById('cd'),t=new Date(document.querySelector('.count').dataset.sel).getTime();
+  function tick(){const ms=t-Date.now();if(ms<=0){el.textContent='LIVE';return;}
+  const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);el.textContent=d+'d '+String(h).padStart(2,'0')+'h '+String(m).padStart(2,'0')+'m';}
+  tick();setInterval(tick,30000);
+})();
+(function(){
+  const SB = window.EM_SUPABASE_URL || 'https://hbpurggayqtjshwlwmet.supabase.co';
+  const KEY = window.EM_SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhicHVyZ2dheXF0anNod2x3bWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMTc1MjksImV4cCI6MjA5Njc5MzUyOX0.06N-pFLMtJNRkfB45pgSMtlc61NPy1EkVD-QADTJl6I';
+  const H = { apikey: KEY, Authorization: 'Bearer ' + KEY };
+  async function loadCount() {
+    try {
+      const r = await fetch(SB + '/rest/v1/em_registration_count?select=total&state=is.null', { headers: H });
+      if (!r.ok) throw new Error(r.status);
+      const data = await r.json();
+      if (data.length > 0) {
+        const count = data[0].total;
+        document.getElementById('reg-line').textContent = count + ' people registered through Election Madness so far';
+      }
+    } catch (e) {}
+  }
+  loadCount();
+})();
 </script>
 </body></html>

@@ -17,12 +17,14 @@ No task files, no Drive documents for code. The repo is the record.
 
 ## Layout
 
-- `site/index.html`, `style.css`, `join.html`: the live site as imported Oct 13 (the 100, schedule, rules, standings; voting runs on Instagram comments).
-- `site/vote/index.html`: on-site voting page, one file, no build step. Reads with the anon key; the only write is one vote row. Decision pending on whether votes live here or on Instagram.
+- `site/index.html`, `style.css`, `join.html`: the live site (the 100, schedule, rules, standings; voting runs on Instagram comments).
+- `site/vote/index.html`: on-site voting page, one file, no build step. Reads with the anon key; the only write is one vote row.
+- `site/register/index.html`: voter registration info and tracking, one file, no build step. Reads public registration count; anon insert only for registrations.
 - `data/*.csv`: candidates, rounds, matchups, posts. Edit these to change the field. `npm run seed` prints idempotent SQL; the owner runs it against the database (never the site).
 - `data/posts.csv`: social media posting schedule (date, time in CT, platform, format, group/week, title, caption, status). Run `node scripts/posts.mjs > data/posts.csv` to regenerate from `data/rounds.csv`.
+- `db/0002_registrations.sql`: voter registration schema. Apply once per Supabase project.
 - `scripts/check.sh`: the one check (secrets, emojis, data integrity, html balance, Playwright smoke at phone width).
-- `test/smoke.mjs`: renders against a fixture and casts a vote through a mocked API.
+- `test/smoke.mjs`: renders against a fixture, casts a vote, and tests the register page at 390px.
 
 ## Rules
 
@@ -30,6 +32,14 @@ No task files, no Drive documents for code. The repo is the record.
 - The database decides what a valid vote is (`em_vote_ok`); the site never trusts itself.
 - Rounds open Monday 10 AM CT and close Sunday 9 PM CT. Closing a round and setting `winner_id` is an owner action (SQL), not a site feature yet.
 - No emojis in anything shipped.
+
+## Voter registration
+
+`site/register/` offers a voter info and registration page. Users select their state, visit vote.gov per-state links to check or register, and tap "I registered" to self-report and be counted.
+
+The count is self-reported; we cannot verify registrations. One device = one count (enforced by `unique(voter)` in `em_registrations`). Users get a random id in localStorage (same scheme as voting) to prevent re-submission from the same browser.
+
+Apply `db/0002_registrations.sql` to the Supabase project once. The table is insert-only; row-level security prevents reads by the anon key. Results show in the public view `em_registration_count` (total by state, and total overall).
 
 ## Running locally
 
