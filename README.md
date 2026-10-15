@@ -19,7 +19,8 @@ No task files, no Drive documents for code. The repo is the record.
 
 - `site/index.html`, `style.css`, `join.html`: the live site as imported Oct 13 (the 100, schedule, rules, standings; voting runs on Instagram comments).
 - `site/vote/index.html`: on-site voting page, one file, no build step. Reads with the anon key; the only write is one vote row. Decision pending on whether votes live here or on Instagram.
-- `data/*.csv`: candidates, rounds, matchups. Edit these to change the field. `npm run seed` prints idempotent SQL; the owner runs it against the database (never the site).
+- `data/*.csv`: candidates, rounds, matchups, posts. Edit these to change the field. `npm run seed` prints idempotent SQL; the owner runs it against the database (never the site).
+- `data/posts.csv`: social media posting schedule (date, time in CT, platform, format, group/week, title, caption, status). Run `node scripts/posts.mjs > data/posts.csv` to regenerate from `data/rounds.csv`.
 - `scripts/check.sh`: the one check (secrets, emojis, data integrity, html balance, Playwright smoke at phone width).
 - `test/smoke.mjs`: renders against a fixture and casts a vote through a mocked API.
 
