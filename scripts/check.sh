@@ -11,5 +11,5 @@ for(const m of csv('matchups.csv')){for(const k of ['a_id','b_id'])if(!C.has(m[k
 for(const r of csv('rounds.csv'))if(Date.parse(r.closes_at)<=Date.parse(r.opens_at)){console.error('round '+r.id+' closes before it opens');bad++}
 if(bad)process.exit(1);console.log('data ok')"
 echo "== html";      node -e "const s=require('fs').readFileSync('site/vote/index.html','utf8');const o=(s.match(/<div\b/g)||[]).length,c=(s.match(/<\/div>/g)||[]).length;if(o!==c){console.error('div mismatch',o,c);process.exit(1)};console.log('html ok')"
-echo "== smoke";     [ -d node_modules/playwright ] || npm i --silent --no-audit --no-fund playwright@1.49.1 >/dev/null; node test/smoke.mjs
+echo "== smoke";     [ -d node_modules/playwright ] || npm i --no-save --silent --no-audit --no-fund playwright@1.49.1 >/dev/null; node test/smoke.mjs
 echo "== all green"
