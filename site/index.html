@@ -13,7 +13,7 @@
 </head><body>
 <header class="top">
   <a class="brand" href="/"><svg viewBox="0 0 512 512" class="mk" aria-hidden="true"><defs><linearGradient id="mk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#243150"/><stop offset="1" stop-color="#0E1220"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#mk)"/><path d="M118 150 H236 V362 H118 M236 256 H282 L334 308 L424 188" fill="none" stroke="#FFB21A" stroke-width="46" stroke-linecap="square" transform="translate(-14 0)"/></svg><span><b class="b">ELECTION</b> <b class="r">MADNESS</b> <i>’28</i><small>Bracket the ballot.</small></span></a>
-  <nav><a href="#groups">This week</a><a href="#standings">Standings</a><a href="#schedule">Schedule</a><a href="#field">The 100</a><a href="#rules">Rules</a><a href="/vote/">Vote</a>
+  <nav><a href="#groups">This week</a><a href="#standings">Standings</a><a href="#schedule">Schedule</a><a href="#field">The 100</a><a href="#rules">Rules</a>
   <a class="btn ghost" href="/register">Register</a><a class="btn" href="https://www.instagram.com/ElectionMadness28/" target="_blank" rel="noopener">Vote on Instagram</a></nav>
 </header>
 <section class="hero">
@@ -110,6 +110,106 @@
     } catch (e) {}
   }
   loadCount();
+})();
+(function(){
+  async function loadResults() {
+    try {
+      const r = await fetch('results.json');
+      if (!r.ok) return;
+      const results = await r.json();
+
+      const nameMap = {
+        'J.B. Pritzker': 'jbpritzker',
+        'Raphael Warnock': 'raphaelwarnock',
+        'Beto O\'Rourke': 'betoorourke',
+        'Maura Healey': 'maurahealey',
+        'Nikki Haley': 'nikkihaley',
+        'Rick Scott': 'rickscott',
+        'Mike Lee': 'mikelee',
+        'Robert F. Kennedy Jr.': 'robertfkennedyjr'
+      };
+
+      // Update percentages in This week's groups
+      for (const li of document.querySelectorAll('#groups ol li')) {
+        const name = li.querySelector('.nm')?.textContent;
+        if (!name) continue;
+        const candId = nameMap[name];
+        if (!candId) continue;
+
+        // Look for results in g1 (this week)
+        const week = 'g1';
+        if (results[week]) {
+          for (const party of ['blue', 'red']) {
+            if (results[week][party]) {
+              for (const item of results[week][party]) {
+                if (item.id === candId) {
+                  const pc = li.querySelector('.pc');
+                  if (pc) {
+                    pc.textContent = item.pct + '%';
+                    if (item.winner) li.classList.add('winner');
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Update standings section
+      const standings = document.getElementById('standings');
+      if (!standings) return;
+
+      const [blueDiv, redDiv] = standings.querySelectorAll('div > div');
+
+      // Check if we have any results
+      const hasResults = Object.keys(results).length > 0;
+
+      if (!hasResults) {
+        return; // Keep default message
+      }
+
+      // Build standings for blue and red
+      const blueWinners = [];
+      const redWinners = [];
+
+      for (let w = 1; w <= 12; w++) {
+        const week = 'g' + w;
+        if (results[week]) {
+          if (results[week].blue && results[week].blue.length > 0) {
+            const winner = results[week].blue.find(c => c.winner);
+            if (winner) blueWinners.push({ week: w, name: winner.name, pct: winner.pct });
+          }
+          if (results[week].red && results[week].red.length > 0) {
+            const winner = results[week].red.find(c => c.winner);
+            if (winner) redWinners.push({ week: w, name: winner.name, pct: winner.pct });
+          }
+        }
+      }
+
+      if (blueWinners.length > 0 || redWinners.length > 0) {
+        // Replace placeholder text with winners
+        if (blueDiv) {
+          const h3 = blueDiv.querySelector('h3');
+          const p = blueDiv.querySelector('p');
+          if (p) {
+            if (blueWinners.length > 0) {
+              p.innerHTML = blueWinners.map(w => '<div><b>' + w.name + '</b> <span>' + w.pct + '%</span></div>').join('');
+            }
+          }
+        }
+        if (redDiv) {
+          const h3 = redDiv.querySelector('h3');
+          const p = redDiv.querySelector('p');
+          if (p) {
+            if (redWinners.length > 0) {
+              p.innerHTML = redWinners.map(w => '<div><b>' + w.name + '</b> <span>' + w.pct + '%</span></div>').join('');
+            }
+          }
+        }
+      }
+    } catch (e) {}
+  }
+  loadResults();
 })();
 </script>
 </body></html>
