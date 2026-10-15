@@ -1,0 +1,78 @@
+# Drop this in any repo at .github/workflows/foundry-report.yml
+#
+# It tells the Foundry HQ Office what is happening with pull requests here, so
+# the crew reflects real work instead of example data.
+#
+# Two things to set up, once per repo:
+#   1. Change PROJECT below to this venture's id (must match foundry_ventures.venture_id).
+#   2. Add the key under Settings -> Secrets and variables -> Actions, named FOUNDRY_KEY.
+#      Never paste the key into this file. Public repos make it public instantly.
+
+name: foundry report
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, closed, synchronize]
+
+# Read-only. This workflow reports; it never changes the repo.
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    # Skip if the key is not configured, rather than failing every PR with a red X.
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - name: Tell Foundry
+        env:
+          FOUNDRY_KEY: ${{ secrets.FOUNDRY_KEY }}
+          PROJECT: electionmadness          # <-- this repo (foundry_ventures.venture_id)
+          TITLE:   ${{ github.event.pull_request.title }}
+          NUMBER:  ${{ github.event.pull_request.number }}
+          URL:     ${{ github.event.pull_request.html_url }}
+          MERGED:  ${{ github.event.pull_request.merged }}
+          ACTION:  ${{ github.event.action }}
+          DRAFT:   ${{ github.event.pull_request.draft }}
+          AUTHOR:  ${{ github.event.pull_request.user.login }}
+        run: |
+          set -u
+          if [ -z "${FOUNDRY_KEY:-}" ]; then
+            echo "FOUNDRY_KEY is not set in this repo's Actions secrets. Skipping."
+            exit 0
+          fi
+
+          # Map the pull request to what the office should show.
+          #   merged            -> done, no approval needed, celebrate
+          #   closed unmerged   -> done, nothing to approve
+          #   draft             -> working, not ready for a look
+          #   open and ready    -> waiting on Andrew to merge from his phone
+          if [ "$ACTION" = "closed" ] && [ "$MERGED" = "true" ]; then
+            TIER=green;  PROGRESS=100; STATE="merged"
+          elif [ "$ACTION" = "closed" ]; then
+            TIER=green;  PROGRESS=0;   STATE="closed without merging"
+          elif [ "$DRAFT" = "true" ]; then
+            TIER=green;  PROGRESS=50;  STATE="in progress (draft)"
+          else
+            TIER=yellow; PROGRESS=90;  STATE="ready for you to merge"
+          fi
+
+          SUMMARY="PR #${NUMBER} ${STATE}: ${TITLE} (by ${AUTHOR})"
+          echo "$SUMMARY"
+
+          # --fail-with-body so a rejected post shows up as a failed step rather
+          # than passing quietly, which is how the deploy problem hid for weeks.
+          curl --fail-with-body -sS -X POST \
+            "https://hbpurggayqtjshwlwmet.supabase.co/functions/v1/agent-report" \
+            -H "content-type: application/json" \
+            -H "x-foundry-key: ${FOUNDRY_KEY}" \
+            -d "$(jq -n \
+                  --arg p "$PROJECT" \
+                  --arg s "$SUMMARY" \
+                  --arg t "$TIER" \
+                  --arg l "$URL" \
+                  --argjson g "$PROGRESS" \
+                  '{project:$p, machine:"github", summary:$s, tier:$t, progress:$g, links:[$l]}')"
+          echo ""
+          echo "Reported to Foundry."
