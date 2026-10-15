@@ -41,6 +41,10 @@ The count is self-reported; we cannot verify registrations. One device = one cou
 
 Apply `db/0002_registrations.sql` to the Supabase project once. The table is insert-only; row-level security prevents reads by the anon key. Results show in the public view `em_registration_count` (total by state, and total overall).
 
+## Weekly results
+
+Every Sunday evening, the comment count from the week's Instagram posts is counted by hand, then recorded in a pull request that edits `data/results.csv` — one row per candidate per week. The site reads that file, computes per-candidate and per-group percentages, and displays them on the home page: each candidate's percentage in the "This week's groups" card and the winner per side in "Standings."
+
 ## Running locally
 
     npm run check        # everything CI runs
