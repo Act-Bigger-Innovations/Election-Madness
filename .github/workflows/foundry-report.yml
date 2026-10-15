@@ -13,11 +13,14 @@ name: foundry report
 on:
   pull_request:
     types: [opened, reopened, ready_for_review, closed, synchronize]
+  issues:
+    types: [labeled]
 
 # Read-only. This workflow reports; it never changes the repo.
 permissions:
   contents: read
   pull-requests: read
+  issues: read
 
 jobs:
   report:
@@ -76,3 +79,30 @@ jobs:
                   '{project:$p, machine:"github", summary:$s, tier:$t, progress:$g, links:[$l]}')"
           echo ""
           echo "Reported to Foundry."
+
+  # An issue labeled "keel" becomes one queued task for the Dev Mac loop (agent-intake is idempotent on the issue URL).
+  # Label "quill" queues it for the content lane instead. Any other label is ignored.
+  intake:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'issues' && (github.event.label.name == 'keel' || github.event.label.name == 'quill') }}
+    steps:
+      - name: Queue it in Foundry
+        env:
+          FOUNDRY_KEY: ${{ secrets.FOUNDRY_KEY }}
+          PROJECT: electionmadness          # <-- this repo (same value as above)
+          TITLE:   ${{ github.event.issue.title }}
+          BODY:    ${{ github.event.issue.body }}
+          URL:     ${{ github.event.issue.html_url }}
+          LABEL:   ${{ github.event.label.name }}
+        run: |
+          set -u
+          if [ -z "${FOUNDRY_KEY:-}" ]; then echo "FOUNDRY_KEY is not set. Skipping."; exit 0; fi
+          AGENT=maker; [ "$LABEL" = "quill" ] && AGENT=grower
+          INSTR="$(printf '%s\n\n%s' "$TITLE" "$(printf '%s' "$BODY" | head -c 1500)")"
+          curl --fail-with-body -sS -X POST \
+            "https://hbpurggayqtjshwlwmet.supabase.co/functions/v1/agent-intake" \
+            -H "content-type: application/json" \
+            -H "x-foundry-key: ${FOUNDRY_KEY}" \
+            -d "$(jq -n --arg p "$PROJECT" --arg i "$INSTR" --arg u "$URL" --arg a "$AGENT" '{project:$p, instruction:$i, url:$u, agent:$a, queued_by:"github"}')"
+          echo ""
+          echo "Queued for $AGENT."
