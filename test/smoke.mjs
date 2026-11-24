@@ -5,6 +5,8 @@ import http from 'node:http'; import fs from 'node:fs'; import path from 'node:p
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const voteHtml = fs.readFileSync(path.join(root, 'site/vote/index.html'), 'utf8');
 const registerHtml = fs.readFileSync(path.join(root, 'site/register/index.html'), 'utf8');
+const homeHtml = fs.readFileSync(path.join(root, 'site/index.html'), 'utf8');
+const siteFile = (f) => fs.readFileSync(path.join(root, 'site', f), 'utf8');
 const csv = (f) => { const [h, ...r] = fs.readFileSync(path.join(root, 'data', f), 'utf8').trim().split('\n'); const c = h.split(','); return r.map(x => Object.fromEntries(x.split(',').map((v, i) => [c[i], v]))); };
 const now = Date.now();
 const fx = {
@@ -18,6 +20,9 @@ const fx = {
 const srv = http.createServer((q, s) => {
   const pathname = new URL(q.url, 'http://localhost').pathname;
   if (pathname === '/register/') { s.writeHead(200, { 'content-type': 'text/html' }); s.end(registerHtml); }
+  else if (pathname === '/home/') { s.writeHead(200, { 'content-type': 'text/html' }); s.end(homeHtml); }
+  else if (['/home/groups.json', '/home/results.json'].includes(pathname)) { s.writeHead(200, { 'content-type': 'application/json' }); s.end(siteFile(pathname.slice(6))); }
+  else if (pathname === '/home/style.css') { s.writeHead(200, { 'content-type': 'text/css' }); s.end(siteFile('style.css')); }
   else { s.writeHead(200, { 'content-type': 'text/html' }); s.end(voteHtml); }
 }).listen(8790);
 const browser = await chromium.launch();
@@ -57,6 +62,21 @@ if ((await page.locator('.state-opt').count()) !== 51) fail('should show all 51 
 if ((await page.locator('h1').textContent()).includes('Make your vote count') === false) fail('register page should have h1');
 const stateCount = await page.locator('#count').textContent(); if (!stateCount.includes('42')) fail('count should show 42, got ' + stateCount);
 const wideReg = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth); if (wideReg) fail('horizontal scroll at 390px on register page');
+
+// Home page follows the date: on Tue Nov 24, 2026 it shows week 3, with weeks 1 and 2 closed
+const home = await ctx.newPage();
+home.on('pageerror', e => errors.push(e.message));
+await home.route('**/rest/v1/**', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(fx[new URL(route.request().url()).pathname.split('/').pop()] || []) }));
+await home.route('https://fonts.googleapis.com/**', (route) => route.fulfill({ status: 200, contentType: 'text/css', body: '' }));
+await home.clock.setFixedTime(new Date('2026-11-24T12:00:00-06:00'));
+await home.goto('http://localhost:8790/home/'); await home.waitForFunction(() => !document.getElementById('wk-sub').textContent.startsWith('Week 1 '));
+const sub = await home.locator('#wk-sub').textContent(); if (!sub.startsWith('Week 3 of 12 · Nov 23 – 29')) fail('home should show week 3, got ' + sub);
+if (!(await home.locator('#wk-cards .gcard.blue').textContent()).includes('Gavin Newsom')) fail('week 3 blue card should list Gavin Newsom');
+const status = await home.locator('#schedule tbody tr td:last-child').allTextContents();
+if (status[0] !== 'Closed' || status[1] !== 'Closed' || status[2] !== 'Voting now' || status[3] !== 'Upcoming') fail('schedule status wrong: ' + status.slice(0, 4).join(','));
+await home.waitForFunction(() => /registered/.test(document.getElementById('reg-line').textContent));
+const reg = await home.locator('#reg-line').textContent(); if (reg !== '42 people say they registered through Election Madness') fail('home counter wording: ' + reg);
+if (await home.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)) fail('horizontal scroll at 390px on home page');
 
 if (errors.length) fail('console errors: ' + errors.join(' | '));
 console.log(process.exitCode ? 'smoke FAILED' : 'smoke ok'); await browser.close(); srv.close();

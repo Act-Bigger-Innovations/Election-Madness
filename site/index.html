@@ -4,7 +4,7 @@
 <title>Election Madness 2028 — the hypothetical 2028 bracket</title>
 <meta name="description" content="100 names. 32 spots. A March-Madness-style bracket for the 2028 presidential race, scored by the public on Instagram.">
 <meta property="og:title" content="Election Madness 2028"><meta property="og:description" content="100 names. 32 spots. You pick. A hypothetical 2028 bracket scored by the public.">
-<meta property="og:image" content="https://madness.mrearthrebirth.com/social-card.png"><meta property="og:url" content="https://madness.mrearthrebirth.com/"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://electionmadness.mrearthrebirth.com/social-card.png"><meta property="og:url" content="https://electionmadness.mrearthrebirth.com/"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#141923">
 <link rel="icon" href="favicon.ico"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,8 +27,8 @@
 </section>
 <main>
 <section id="groups"><h2>This week's groups</h2>
-  <p class="sub">Week 1 of 12 · Nov 9 – 15 · voting closes Sunday 9 PM CT</p>
-  <div class="grid2"><article class="gcard blue">
+  <p class="sub" id="wk-sub">Week 1 of 12 · Nov 9 – 15 · voting closes Sunday 9 PM CT</p>
+  <div class="grid2" id="wk-cards"><article class="gcard blue">
       <header><span>Blue · Group 1</span><span>Nov 9 – 15</span></header>
       <ol><li class=""><span class="nm">J.B. Pritzker</span>
         <span class="of">Governor, Illinois</span><span class="pc"></span>
@@ -86,13 +86,51 @@
 </section>
 </main>
 <footer><span>Election Madness 2028 · a project of <a href="https://mrearthrebirth.com">Mr. Earth Rebirth</a></span>
-<span><a href="/register">Register to vote</a> · Updated Oct 15, 2026 · <a href="https://www.instagram.com/ElectionMadness28/">@ElectionMadness28</a></span></footer>
+<span><a href="/register">Register to vote</a> · Updated Nov 24, 2026 · <a href="https://www.instagram.com/ElectionMadness28/">@ElectionMadness28</a></span></footer>
 <script>
 (function(){
   const el=document.getElementById('cd'),t=new Date(document.querySelector('.count').dataset.sel).getTime();
   function tick(){const ms=t-Date.now();if(ms<=0){el.textContent='LIVE';return;}
   const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);el.textContent=d+'d '+String(h).padStart(2,'0')+'h '+String(m).padStart(2,'0')+'m';}
   tick();setInterval(tick,30000);
+})();
+(function(){
+  // Show the week that is open now. Groups come from groups.json (built from data/groups.csv).
+  const esc = (t) => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const md = (iso) => new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/Chicago' });
+  const range = (w) => { const a = md(w.opens_at), b = md(w.closes_at); return a.split(' ')[0] === b.split(' ')[0] ? a + ' – ' + b.split(' ')[1] : a + ' – ' + b; };
+  window.emWeekReady = fetch('groups.json').then(r => r.ok ? r.json() : []).then(weeks => {
+    if (!weeks.length) return;
+    const now = Date.now();
+    let cur = weeks.find(w => now < Date.parse(w.closes_at));
+    const done = !cur; if (done) cur = weeks[weeks.length - 1];
+    window.EM_WEEK = cur.id;
+    const open = now >= Date.parse(cur.opens_at);
+    const sub = document.getElementById('wk-sub');
+    if (sub) sub.textContent = done ? 'Group stage complete · results in Standings'
+      : 'Week ' + cur.week + ' of ' + weeks.length + ' · ' + range(cur) + ' · ' + (open ? 'voting closes Sunday 9 PM CT' : 'voting opens Monday 10 AM CT');
+    const card = (side, label) => {
+      const names = cur[side];
+      const items = names.map(c => '<li class="" data-id="' + esc(c.id) + '"><span class="nm">' + esc(c.name) + '</span>\n        <span class="of">' + esc(c.title) + '</span><span class="pc"></span>\n        </li>').join('');
+      const more = names.length < 4 ? '<li class=""><span class="nm">+' + (4 - names.length) + ' more</span>\n        <span class="of"><a href="https://www.instagram.com/ElectionMadness28/" target="_blank" rel="noopener">See the full group on Instagram</a></span><span class="pc"></span>\n        </li>' : '';
+      return '<article class="gcard ' + side + '">\n      <header><span>' + label + ' · Group ' + cur.week + '</span><span>' + esc(range(cur)) + '</span></header>\n      <ol>' + items + more + '</ol></article>';
+    };
+    const cards = document.getElementById('wk-cards');
+    if (cards) cards.innerHTML = card('blue', 'Blue') + card('red', 'Red');
+    const rows = document.querySelectorAll('#schedule table.sched tbody tr');
+    weeks.forEach((w, i) => {
+      const tr = rows[i]; if (!tr) return;
+      const cell = tr.lastElementChild;
+      if (now >= Date.parse(w.closes_at)) { tr.className = 'final'; cell.textContent = 'Closed'; }
+      else if (now >= Date.parse(w.opens_at)) { tr.className = 'live'; cell.textContent = 'Voting now'; }
+      else { tr.className = 'soon'; cell.textContent = w === cur ? 'Opens Monday' : 'Upcoming'; }
+    });
+    const closed = weeks.filter(w => now >= Date.parse(w.closes_at)).length;
+    if (closed) document.querySelectorAll('#standings .empty').forEach(p => {
+      p.textContent = closed === 1 ? 'Week 1 is closed. Its result posts here once the comments are counted.'
+        : 'Weeks 1 to ' + closed + ' are closed. Results post here once the comments are counted.';
+    });
+  }).catch(() => {});
 })();
 (function(){
   const SB = window.EM_SUPABASE_URL || 'https://hbpurggayqtjshwlwmet.supabase.co';
@@ -105,7 +143,7 @@
       const data = await r.json();
       if (data.length > 0) {
         const count = data[0].total;
-        document.getElementById('reg-line').textContent = count + ' people registered through Election Madness so far';
+        document.getElementById('reg-line').textContent = count + (count === 1 ? ' person says they registered' : ' people say they registered') + ' through Election Madness';
       }
     } catch (e) {}
   }
@@ -133,11 +171,11 @@
       for (const li of document.querySelectorAll('#groups ol li')) {
         const name = li.querySelector('.nm')?.textContent;
         if (!name) continue;
-        const candId = nameMap[name];
+        const candId = li.dataset.id || nameMap[name];
         if (!candId) continue;
 
-        // Look for results in g1 (this week)
-        const week = 'g1';
+        // Results for the week shown in This week's groups
+        const week = window.EM_WEEK || 'g1';
         if (results[week]) {
           for (const party of ['blue', 'red']) {
             if (results[week][party]) {
@@ -209,7 +247,7 @@
       }
     } catch (e) {}
   }
-  loadResults();
+  (window.emWeekReady || Promise.resolve()).then(loadResults);
 })();
 </script>
 </body></html>
