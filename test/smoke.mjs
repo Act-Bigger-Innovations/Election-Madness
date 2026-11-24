@@ -72,6 +72,8 @@ await home.clock.setFixedTime(new Date('2026-11-24T12:00:00-06:00'));
 await home.goto('http://localhost:8790/home/'); await home.waitForFunction(() => !document.getElementById('wk-sub').textContent.startsWith('Week 1 '));
 const sub = await home.locator('#wk-sub').textContent(); if (!sub.startsWith('Week 3 of 12 · Nov 23 – 29')) fail('home should show week 3, got ' + sub);
 if (!(await home.locator('#wk-cards .gcard.blue').textContent()).includes('Gavin Newsom')) fail('week 3 blue card should list Gavin Newsom');
+for (const side of ['blue', 'red']) { const n = await home.locator('#wk-cards .gcard.' + side + ' li[data-id]').count(); if (n !== 4) fail('week 3 ' + side + ' card should list 4 names, got ' + n); }
+if ((await home.locator('#wk-cards').textContent()).includes('See the full group')) fail('week 3 cards should not point to Instagram for missing names');
 const status = await home.locator('#schedule tbody tr td:last-child').allTextContents();
 if (status[0] !== 'Closed' || status[1] !== 'Closed' || status[2] !== 'Voting now' || status[3] !== 'Upcoming') fail('schedule status wrong: ' + status.slice(0, 4).join(','));
 await home.waitForFunction(() => /registered/.test(document.getElementById('reg-line').textContent));

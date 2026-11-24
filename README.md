@@ -21,7 +21,7 @@ No task files, no Drive documents for code. The repo is the record.
 - `site/vote/index.html`: on-site voting page, one file, no build step. Reads with the anon key; the only write is one vote row.
 - `site/register/index.html`: voter registration info and tracking, one file, no build step. Reads public registration count; anon insert only for registrations.
 - `data/*.csv`: candidates, rounds, matchups, posts. Edit these to change the field. `npm run seed` prints idempotent SQL; the owner runs it against the database (never the site).
-- `data/groups.csv`: who is in each week's Blue and Red group (week, side, candidate_id, sort). `scripts/check.sh` turns it into `site/groups.json`, and the home page shows the week that is open now. Weeks 2-12 list only the headliner until the other three names are added; the page links Instagram for the rest.
+- `data/groups.csv`: who is in each week's Blue and Red group (week, side, candidate_id, sort). `scripts/check.sh` turns it into `site/groups.json`, and the home page shows the week that is open now. Every week lists four names per side: the headliner, one Contender and two Long shots. Weeks 2 to 12 were drawn at random from the 100 (seeded shuffle, seed 20261124). The check fails if a week is short, a name repeats, or a name sits on the wrong side.
 - `data/posts.csv`: social media posting schedule (date, time in CT, platform, format, group/week, title, caption, status). Run `node scripts/posts.mjs > data/posts.csv` to regenerate from `data/rounds.csv`.
 - `db/0002_registrations.sql`: voter registration schema. Apply once per Supabase project.
 - `scripts/check.sh`: the one check (secrets, emojis, data integrity, html balance, Playwright smoke at phone width).
