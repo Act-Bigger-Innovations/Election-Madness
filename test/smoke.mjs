@@ -18,6 +18,7 @@ const fx = {
 const srv = http.createServer((q, s) => {
   const pathname = new URL(q.url, 'http://localhost').pathname;
   if (pathname === '/register/') { s.writeHead(200, { 'content-type': 'text/html' }); s.end(registerHtml); }
+  else if (pathname === '/civic.js') { s.writeHead(200, { 'content-type': 'text/javascript' }); s.end(fs.readFileSync(path.join(root, 'site/civic.js'))); }
   else { s.writeHead(200, { 'content-type': 'text/html' }); s.end(voteHtml); }
 }).listen(8790);
 const browser = await chromium.launch();
@@ -57,6 +58,15 @@ if ((await page.locator('.state-opt').count()) !== 51) fail('should show all 51 
 if ((await page.locator('h1').textContent()).includes('Make your vote count') === false) fail('register page should have h1');
 const stateCount = await page.locator('#count').textContent(); if (!stateCount.includes('42')) fail('count should show 42, got ' + stateCount);
 const wideReg = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth); if (wideReg) fail('horizontal scroll at 390px on register page');
+// Pledge unlocks the badge without registering; the self-report stays separate.
+const before = posts.length;
+await page.locator('#pledge-btn').click(); await page.waitForTimeout(300);
+if (await page.locator('#civic-unlock').isHidden()) fail('pledge should unlock the badge');
+const pledge = posts.slice(before).find(p => p.kind === 'pledge'); if (!pledge || pledge.site !== 'em') fail('pledge should log a civic event, got ' + JSON.stringify(posts.slice(before)));
+if (posts.slice(before).some(p => 'state' in p && 'voter' in p && !('kind' in p))) fail('pledge must not write a registration');
+if ((await page.locator('#civic-save').innerHTML()).trim() !== '') fail('email save should stay hidden until a player project is set');
+if (!(await page.locator('#rtv-btn').getAttribute('href')).startsWith('https://register.rockthevote.org/')) fail('register link should go to Rock the Vote');
+const wideReg2 = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth); if (wideReg2) fail('horizontal scroll at 390px after unlock');
 
 if (errors.length) fail('console errors: ' + errors.join(' | '));
 console.log(process.exitCode ? 'smoke FAILED' : 'smoke ok'); await browser.close(); srv.close();

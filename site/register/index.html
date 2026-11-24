@@ -28,6 +28,13 @@
 .register-btn:hover{filter:brightness(1.06)}
 .register-btn:disabled{opacity:.5;cursor:not-allowed}
 .count-display{font-family:var(--m);font-size:18px;font-weight:700;color:var(--led);margin-top:16px;min-height:24px}
+.civic-badge{display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px;border:2px dashed var(--led);border-radius:6px}
+.civic-badge svg{flex:none;width:56px;height:56px}
+.civic-save{margin-top:14px;display:grid;gap:8px}
+.civic-row{display:flex;gap:8px;flex-wrap:wrap}
+.civic-row input{flex:1 1 200px;min-width:0;box-sizing:border-box;padding:12px;border:2px solid var(--ink);border-radius:4px;font:15px var(--b)}
+.civic-row button{box-sizing:border-box;padding:12px 16px;border:none;border-radius:4px;background:var(--ink);color:var(--paper);font-weight:700;cursor:pointer}
+.civic-fine{font-size:13px;color:var(--ink2);margin:0}
 .thanks{background:var(--ok);color:white;padding:20px;border-radius:6px;margin-top:20px;text-align:center;font-weight:600}
 @media(max-width:520px){
   .register-btn{width:100%;font-size:15px;padding:14px 18px}
@@ -58,12 +65,13 @@
         <div class="step">
           <span class="step-num">Step 2</span>
           <h3>Register or confirm</h3>
-          <p>If you're not registered, follow the link to register in your state.</p>
+          <p>Not registered yet? Rock the Vote walks you through your state's form in a few minutes.</p>
+          <p style="margin-top:12px"><a class="register-btn" id="rtv-btn" href="https://register.rockthevote.org/registrants/new" target="_blank" rel="noopener">Register to vote</a></p>
         </div>
         <div class="step">
           <span class="step-num">Step 3</span>
           <h3>Tell us</h3>
-          <p>Tap the button below once you're registered. It counts what people tell us, so we report it as people who say they're registered.</p>
+          <p>Just registered? Tap the button below. We can't check it, so we report it as an estimate: people who say they registered.</p>
         </div>
       </div>
 
@@ -72,9 +80,23 @@
         <div class="states" id="states"></div>
       </div>
 
+      <div class="steps">
+        <div class="step" id="civic-step">
+          <span class="step-num">Unlock</span>
+          <h3>The Ballot Box badge</h3>
+          <p>Check your registration with your state above, or pledge to vote. Either one unlocks the badge, whether you were already registered or not.</p>
+          <p style="margin-top:12px"><button class="register-btn" id="pledge-btn" type="button">I pledge to vote</button></p>
+          <div class="civic-badge" id="civic-unlock" hidden>
+            <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="22" width="48" height="36" rx="4" fill="#F4EFE3" stroke="#141923" stroke-width="3"/><rect x="20" y="28" width="24" height="5" rx="2" fill="#141923"/><path d="M24 6h16v22H24z" fill="#FFFFFF" stroke="#141923" stroke-width="3"/><path d="M28 14l3 4 6-8" fill="none" stroke="#BF3A2B" stroke-width="3"/></svg>
+            <div><b>Ballot Box badge unlocked.</b><p class="civic-fine">It stays on this device. Save it with your email to keep it anywhere.</p></div>
+          </div>
+          <div id="civic-save"></div>
+        </div>
+      </div>
+
       <div class="cta-section">
-        <button class="register-btn" id="register-btn" disabled>I'm registered</button>
-        <div class="count-display"><b id="count">—</b> people say they're registered</div>
+        <button class="register-btn" id="register-btn" disabled>I just registered</button>
+        <div class="count-display"><b id="count">—</b> people say they just registered</div>
       </div>
 
       <div class="steps" style="margin-top:40px">
@@ -90,6 +112,17 @@
 </main>
 <footer><span>Election Madness 2028 · a project of <a href="https://mrearthrebirth.com">Mr. Earth Rebirth</a></span>
 <span>Updated Nov 24, 2026 · <a href="https://www.instagram.com/ElectionMadness28/">@ElectionMadness28</a> · <a href="https://buymeacoffee.com/mrearthrebirth" target="_blank" rel="noopener">Support this project</a></span></footer>
+<script>
+window.CIVIC_CONFIG = {
+  site: 'em',
+  events: { url: 'https://hbpurggayqtjshwlwmet.supabase.co', key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhicHVyZ2dheXF0anNod2x3bWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMTc1MjksImV4cCI6MjA5Njc5MzUyOX0.06N-pFLMtJNRkfB45pgSMtlc61NPy1EkVD-QADTJl6I' },
+  // Email save stays hidden until this points at a project used only for game players: { url, key }.
+  player: null,
+  // Rock the Vote partner ID goes here once the partner account exists.
+  rtv: { partner: '' }
+};
+</script>
+<script src="../civic.js"></script>
 <script>
 const SB = window.EM_SUPABASE_URL || 'https://hbpurggayqtjshwlwmet.supabase.co';
 const KEY = window.EM_SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhicHVyZ2dheXF0anNod2x3bWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMTc1MjksImV4cCI6MjA5Njc5MzUyOX0.06N-pFLMtJNRkfB45pgSMtlc61NPy1EkVD-QADTJl6I';
@@ -233,6 +266,8 @@ for (const s of states) {
   btn.className = 'state-opt';
   btn.textContent = s.name;
   btn.addEventListener('click', () => {
+    Civic.log('check_click', s.code);
+    civicUnlocked();
     selectedState = s.code;
     document.getElementById('register-btn').disabled = false;
     document.querySelectorAll('.state-opt').forEach(b => b.style.background = 'var(--paper)');
@@ -240,6 +275,21 @@ for (const s of states) {
   });
   statesEl.appendChild(btn);
 }
+
+function civicUnlocked() {
+  Civic.unlock('ballot_box_badge');
+  document.getElementById('civic-unlock').hidden = false;
+  Civic.saveForm(document.getElementById('civic-save'), 'Ballot Box badge');
+}
+document.getElementById('pledge-btn').addEventListener('click', () => {
+  Civic.log('pledge', selectedState);
+  civicUnlocked();
+  const b = document.getElementById('pledge-btn'); b.disabled = true; b.textContent = 'Pledged';
+});
+const rtv = document.getElementById('rtv-btn');
+rtv.href = Civic.rtvLink('em-register');
+rtv.addEventListener('click', () => Civic.log('register_click', selectedState));
+Civic.handleReturn().then(() => { if (Civic.has('ballot_box_badge')) civicUnlocked(); });
 
 window.addEventListener('DOMContentLoaded', loadCount);
 loadCount();
