@@ -49,3 +49,10 @@ Every Sunday evening, the comment count from the week's Instagram posts is count
 
     npm run check        # everything CI runs
     npx serve site       # or open site/index.html
+
+## Status (Nov 24, 2026)
+
+- Rounds run on schedule; voting is on Instagram.
+- The register page needs `db/0002_registrations.sql` applied once to the Foundry project. Until then every "I'm registered" tap fails.
+- The count is self-reported and is shown as "people say they're registered". Verified counts need a registration partner's tracked link (Rock the Vote partner sign-up is Andrew's step).
+- Poll worker sign-ups go to Power the Polls; it lists no partner tracking, so clicks are not counted yet.
