@@ -12,13 +12,13 @@ create table em_registrations (
 
 -- Public view of registration counts
 create or replace view em_registration_count as
-select
-  count(*)::bigint as total,
-  state
-from em_registrations
-group by state
-union all
-select count(*)::bigint, null from em_registrations;
+select total, state from (
+  select count(*)::bigint as total, state from em_registrations group by state
+  union all
+  select count(*)::bigint, null from em_registrations
+) t
+order by state nulls first;
+-- The total row (state null) comes first, because the register page reads the first row.
 
 -- Row-level security: anon can only insert
 alter table em_registrations enable row level security;

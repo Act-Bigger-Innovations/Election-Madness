@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Voter Registration — Election Madness 2028</title>
-<meta name="description" content="Check your voter registration status and register to vote. Election Madness tracks how many people we help register.">
+<meta name="description" content="Check your voter registration, register in your state, and sign up to work the polls.">
 <meta name="theme-color" content="#141923">
 <link rel="icon" href="../favicon.ico"><link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +24,7 @@
 .state-opt:hover{background:var(--rule);border-color:var(--ink2)}
 .state-opt:active{transform:scale(.98)}
 .cta-section{margin:32px 0 0}
-.register-btn{display:inline-block;background:var(--led);color:var(--board);font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:16px;padding:16px 24px;border-radius:4px;text-decoration:none;border:none;cursor:pointer;font:inherit}
+.register-btn{display:inline-block;box-sizing:border-box;background:var(--led);color:var(--board);font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:16px;padding:16px 24px;border-radius:4px;text-decoration:none;border:none;cursor:pointer;font:inherit}
 .register-btn:hover{filter:brightness(1.06)}
 .register-btn:disabled{opacity:.5;cursor:not-allowed}
 .count-display{font-family:var(--m);font-size:18px;font-weight:700;color:var(--led);margin-top:16px;min-height:24px}
@@ -43,7 +43,7 @@
 <section class="reg-hero">
   <div class="hwrap">
     <h1>Make your vote count.</h1>
-    <p class="lede">First, register. Then vote. Election Madness will track how many people register.</p>
+    <p class="lede">First, register. Then vote. Then help run the election in your town.</p>
   </div>
 </section>
 <main>
@@ -63,7 +63,7 @@
         <div class="step">
           <span class="step-num">Step 3</span>
           <h3>Tell us</h3>
-          <p>Tap the button below and we'll count you. Your registration is self-reported and helps track our impact.</p>
+          <p>Tap the button below once you're registered. It counts what people tell us, so we report it as people who say they're registered.</p>
         </div>
       </div>
 
@@ -73,14 +73,23 @@
       </div>
 
       <div class="cta-section">
-        <button class="register-btn" id="register-btn" disabled>I registered</button>
-        <div class="count-display">Registered: <b id="count">—</b> people</div>
+        <button class="register-btn" id="register-btn" disabled>I'm registered</button>
+        <div class="count-display"><b id="count">—</b> people say they're registered</div>
+      </div>
+
+      <div class="steps" style="margin-top:40px">
+        <div class="step">
+          <span class="step-num">Step 4</span>
+          <h3>Work the polls</h3>
+          <p>Elections run on poll workers, and most places pay them. Power the Polls matches you with your local election office.</p>
+          <p style="margin-top:12px"><a class="register-btn" id="poll-btn" href="https://www.powerthepolls.org/" target="_blank" rel="noopener">Sign up to work the polls</a></p>
+        </div>
       </div>
     </div>
   </section>
 </main>
 <footer><span>Election Madness 2028 · a project of <a href="https://mrearthrebirth.com">Mr. Earth Rebirth</a></span>
-<span>Updated Oct 15, 2026 · <a href="https://www.instagram.com/ElectionMadness28/">@ElectionMadness28</a></span></footer>
+<span>Updated Nov 24, 2026 · <a href="https://www.instagram.com/ElectionMadness28/">@ElectionMadness28</a> · <a href="https://buymeacoffee.com/mrearthrebirth" target="_blank" rel="noopener">Support this project</a></span></footer>
 <script>
 const SB = window.EM_SUPABASE_URL || 'https://hbpurggayqtjshwlwmet.supabase.co';
 const KEY = window.EM_SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhicHVyZ2dheXF0anNod2x3bWV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMTc1MjksImV4cCI6MjA5Njc5MzUyOX0.06N-pFLMtJNRkfB45pgSMtlc61NPy1EkVD-QADTJl6I';
@@ -184,7 +193,7 @@ async function registerVoter() {
 
       const thanks = document.createElement('div');
       thanks.className = 'thanks';
-      thanks.textContent = 'Thanks for registering! We\'re counting you.';
+      thanks.textContent = 'Thanks. You\'re counted. Next: sign up to work the polls below.';
       btn.parentElement.appendChild(thanks);
 
       await new Promise(r => setTimeout(r, 500));
@@ -206,7 +215,7 @@ async function registerVoter() {
     const thanks = document.createElement('div');
     thanks.className = 'thanks';
     thanks.style.background = '#BF3A2B';
-    thanks.textContent = 'Thanks for registering! We\'re counting you.';
+    thanks.textContent = 'Thanks. You\'re counted. Next: sign up to work the polls below.';
     if (!document.querySelector('.thanks')) {
       document.getElementById('register-btn').parentElement.appendChild(thanks);
     }
