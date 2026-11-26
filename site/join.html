@@ -49,52 +49,18 @@ body.sent .done{display:block}
   <div class="form-wrap">
     <h1>Get the matchup<br><span class="a">every Monday.</span></h1>
     <p class="sub">100 names. 32 spots in the 2028 bracket. Four walk in each week, one survives, and your comment is the vote.</p>
-    <form id="joinForm" novalidate>
-      <input id="email" type="email" name="email" placeholder="you@email.com" autocomplete="email" required aria-label="Email address">
-      <button type="submit" id="joinBtn">Join the bracket</button>
-    </form>
-    <p class="msg" id="msg" role="status"></p>
-    <p class="fine">One email a week. Unsubscribe any time. We never sell your address.</p>
+    <a class="btn big" href="https://www.instagram.com/electionmadness28/" target="_blank" rel="noopener">Follow @electionmadness28</a>
+    <p class="fine">The matchup posts on Instagram every Monday. Your comment is the vote.</p>
     <ul class="bullets">
       <li><b>Monday</b>This week's two groups, the names, and what's at stake.</li>
       <li><b>Sunday</b>Results, the best argument of the week, and who's on the bubble.</li>
       <li><b>Lock Watch</b>The moment someone actually declares for 2028.</li>
     </ul>
   </div>
-
-  <div class="done">
-    <h2>You're in.</h2>
-    <p>Check your inbox for the rules. The first matchup lands Monday.</p>
-    <p>Voting happens in the comments on Instagram — follow so your group shows up.</p>
-    <a class="btn big" href="https://www.instagram.com/electionmadness28/" target="_blank" rel="noopener">Follow @electionmadness28</a>
-    <p style="margin-top:14px"><a href="/" style="color:#9AA3B5;font-size:14px">See the full bracket →</a></p>
-  </div>
 </div></div>
 <footer class="jfoot">
   <span>Election Madness 2028 · a fan game, not a poll</span>
-  <span><a href="/">Bracket</a> · <a href="https://www.instagram.com/electionmadness28/">Instagram</a></span>
+  <span><a href="/">Bracket</a> · <a href="/privacy/">Privacy</a> · <a href="https://www.instagram.com/electionmadness28/">Instagram</a></span>
 </footer>
-<script>
-// If the signup runs on a separate Worker (Plan B), set this to its URL:
-// window.JOIN_ENDPOINT = "https://join.mrearthrebirth.com/";
-(function(){
-  var f=document.getElementById('joinForm'),b=document.getElementById('joinBtn'),e=document.getElementById('email'),m=document.getElementById('msg');
-  f.addEventListener('submit',async function(ev){
-    ev.preventDefault(); m.className='msg'; m.textContent='';
-    var email=e.value.trim();
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ m.className='msg err'; m.textContent='That email doesn’t look right.'; e.focus(); return; }
-    b.disabled=true; var old=b.textContent; b.textContent='Adding you…';
-    try{
-      var r=await fetch(window.JOIN_ENDPOINT||'/api/join',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:email})});
-      var d=await r.json().catch(function(){return {};});
-      if(r.ok&&d.ok){ document.body.classList.add('sent'); window.scrollTo(0,0); return; }
-      throw new Error(d.error||'failed');
-    }catch(err){
-      m.className='msg err';
-      m.innerHTML='Couldn’t add you just now. Try again, or follow <a href="https://www.instagram.com/electionmadness28/" style="color:#FFB21A">@electionmadness28</a> and you won’t miss a group.';
-      b.disabled=false; b.textContent=old;
-    }
-  });
-})();
-</script>
+
 </body></html>

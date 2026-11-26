@@ -1,0 +1,45 @@
+name: deploy
+
+# The live site is the Cloudflare Worker "electionmadness2028" serving the site/ folder.
+# Puts site/ live when main changes, so merged means live.
+# Does nothing until these exist under Settings, Secrets and variables, Actions:
+#   secrets   CLOUDFLARE_API_TOKEN (Workers Scripts: Edit) and CLOUDFLARE_ACCOUNT_ID
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: true
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Stop quietly if the settings are not there
+        id: gate
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "ready=no" >> "$GITHUB_OUTPUT"
+            echo "Deploy skipped: add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID."
+          else
+            echo "ready=yes" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.ready == 'yes'
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.ready == 'yes'
+        with: { node-version: 22 }
+      - name: Rebuild the results and groups files from data
+        if: steps.gate.outputs.ready == 'yes'
+        run: |
+          node scripts/results.mjs > site/results.json
+          node scripts/groups.mjs > site/groups.json
+      - name: Upload site/ to the Cloudflare Worker
+        if: steps.gate.outputs.ready == 'yes'
+        run: npx --yes wrangler@4 deploy --name electionmadness2028 --assets "site" --compatibility-date 2026-11-01
