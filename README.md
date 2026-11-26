@@ -2,7 +2,7 @@
 
 A public, March Madness-style bracket of likely 2028 presidential contenders. One vote per matchup per device, one week per round, winners advance. Hypothetical until candidates declare.
 
-- Live site: https://electionmadness.mrearthrebirth.com (Cloudflare Pages; `site/` is the deployed tree, `site/vote/` is the on-site voting page, not yet linked from the home page)
+- Live site: https://electionmadness.mrearthrebirth.com (Cloudflare Worker `electionmadness2028` serving static files, deployed by `.github/workflows/deploy.yml` on every push to `main` once the two Cloudflare secrets are set; `site/` is the deployed tree, `site/vote/` is the on-site voting page, not yet linked from the home page)
 - Database: Foundry Supabase project `hbpurggayqtjshwlwmet`, tables `em_candidates`, `em_rounds`, `em_matchups`, `em_votes`, view `em_tallies`
 - Social: @ElectionMadness28
 
